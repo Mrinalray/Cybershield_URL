@@ -60,7 +60,7 @@ https://cybershield-url.netlify.app
 
 ## 📸 Preview
 
-![CyberShield Preview](https://mrinalray.github.io/Cybershield_URL)
+![CyberShield Preview](assets/cybershield_result.png)
 
 ---
 
