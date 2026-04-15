@@ -1,4 +1,5 @@
 # 🛡️ CyberShield URL Scanner
+![Cybershield Loading](assets/cybershield.png)
 
 🚀 **CyberShield** is a real-time URL security scanner that helps users detect whether a website is safe or potentially harmful before visiting it.
 
@@ -9,24 +10,36 @@ https://cybershield-url.netlify.app
 
 ## 📌 Features
 
-* 🔍 Real-time URL scanning
-* 🛡️ Detects phishing, malware, and social engineering threats
-* ⚡ Fast and responsive UI
-* 🌐 Uses Google Safe Browsing API
-* ✅ Simple and user-friendly interface
+* 🔍 **Real-time URL scanning**
+* 🛡️ **Detects phishing, malware, and social engineering threats**
+* ⚡ **Fast and responsive UI**
+* 🌐 **Uses Google Safe Browsing API**
+* ✅ **Simple and user-friendly interface**
 
 ---
 
 ## 🧠 How It Works
 
-1. User enters a URL
-2. The system sends a request to the backend/API
-3. Google Safe Browsing checks the URL
-4. Result is displayed as:
+1. 🔗 **Enter URL**  
+   The user inputs a website link into the scanner.
 
-   * ✅ Safe
-   * ⚠️ Potential Threat
+2. ⚡ **Send Request**  
+   The application sends the URL to the security API.
 
+3. 🛡️ **Threat Analysis**  
+   Google Safe Browsing analyzes the URL for:
+   - Phishing attacks  
+   - Malware  
+   - Social engineering threats  
+
+4. 📊 **Display Result**  
+   The system shows a clear result:
+   - ✅ **Safe** — No threats detected  
+   - ⚠️ **Potential Threat** — Risky or malicious content found  
+
+---
+
+---
 ---
 
 ## 🛠️ Tech Stack
