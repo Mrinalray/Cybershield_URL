@@ -1,7 +1,8 @@
 # 🛡️ CyberShield URL Scanner
 ![Cybershield Loading](assets/cybershield.png)
 
-🚀 **CyberShield** is a real-time URL security scanner that helps users detect whether a website is safe or potentially harmful before visiting it.
+🚀 **CyberShield** 
+* **is a real-time URL security scanner that helps users detect whether a website is safe or potentially harmful before visiting it**.
 
 🔗 **Live Demo:**
 https://cybershield-url.netlify.app
@@ -19,6 +20,7 @@ https://cybershield-url.netlify.app
 ---
 
 ## 🧠 How It Works
+![Main Page View](assets/cybershield_main_page.png)
 
 1. 🔗 **Enter URL**  
    The user inputs a website link into the scanner.
@@ -42,17 +44,23 @@ https://cybershield-url.netlify.app
 ---
 ---
 
-## 🛠️ Tech Stack
+## 🧠 Tech Stack
 
-* **Frontend:** HTML, CSS, JavaScript
-* **API:** Google Safe Browsing API
-* **Hosting:** GitHub Pages
+| Layer        | Technology |
+|-------------|-----------|
+| Frontend     | HTML5 |
+| Styling      | CSS3 (Custom Properties, Responsive Design) |
+| Logic        | JavaScript (Vanilla JS) |
+| Backend      | Node.js (API Handling) |
+| Security API | Google Safe Browsing API |
+| Deployment   | Render / Netlify / GitHub Pages |
 
+---
 ---
 
 ## 📸 Preview
 
-![CyberShield Preview](https://mrinalray.github.io/Cybershield_URL/)
+![CyberShield Preview](https://mrinalray.github.io/Cybershield_URL)
 
 ---
 
@@ -115,6 +123,10 @@ const API_KEY = "YOUR_API_KEY";
 **Mrinal Roy**
 
 * GitHub: https://github.com/mrinalray
+  
+**Rahul Sah**
+  * GitHub: https://github.com/real-rahul1
+  
 
 ---
 
