@@ -33,7 +33,7 @@ const team = [
       <div class="member-card">
         <div class="member-avatar">
           <img src="${m.img}" alt="${m.name}"
-            onerror="this.parentElement.innerHTML='${initials}'">
+            onerror="this.parentElement.textContent='${initials}'">
         </div>
         <div class="member-name">${m.name}</div>
       </div>`;
