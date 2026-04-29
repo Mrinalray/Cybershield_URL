@@ -131,10 +131,12 @@ async function checkSecurity() {
       updateStats('danger');
       showResult('danger', 'Threat Detected!',
         'This URL is flagged as dangerous. Do not visit it.', url, threats);
+      saveScan(url, 'danger');
     } else {
       updateStats('safe');
       showResult('safe', 'URL is Safe',
         'No threats detected. Google Safe Browsing found no issues.', url, []);
+      saveScan(url, 'safe');
     }
 
   } catch (err) {
@@ -150,3 +152,65 @@ async function checkSecurity() {
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkSecurity();
 });
+
+// ════════════════════════════
+//  RECENT SCANS
+// ════════════════════════════
+const HISTORY_KEY = 'cybershield_history';
+const MAX_HISTORY = 5;
+
+function getHistory() {
+  try {
+    const history = localStorage.getItem(HISTORY_KEY);
+    return history ? JSON.parse(history) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveScan(url, resultType) {
+  let history = getHistory();
+  // Remove if already exists to put it at the top
+  history = history.filter(item => item.url !== url);
+  
+  history.unshift({ url, type: resultType });
+  if (history.length > MAX_HISTORY) {
+    history = history.slice(0, MAX_HISTORY);
+  }
+  
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  renderRecentScans();
+}
+
+function clearHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+  renderRecentScans();
+}
+
+function renderRecentScans() {
+  const history = getHistory();
+  const container = document.getElementById('recentScansContainer');
+  const list = document.getElementById('recentScansList');
+  
+  if (!container || !list) return;
+  
+  if (!history || history.length === 0) {
+    container.classList.add('hidden');
+    return;
+  }
+  
+  container.classList.remove('hidden');
+  list.innerHTML = history.map(item => `
+    <div class="recent-scan-item" onclick="fillExample('${item.url}')">
+      <div class="recent-scan-info">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b; flex-shrink: 0;">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span class="recent-scan-url">${item.url}</span>
+      </div>
+      <span class="recent-scan-badge badge-${item.type}">${item.type}</span>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', renderRecentScans);
