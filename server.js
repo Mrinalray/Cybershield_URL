@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const https = require("https");
+const http = require("http");
 
 const app = express();
 const PORT = 3000;
@@ -14,11 +16,45 @@ app.use(cors({
 app.use(express.json());
 
 // ⚠️ IMPORTANT: Replace this with a NEW API key from Google Cloud Console
-// Your old key was exposed publicly — revoke it immediately at:
-// https://console.cloud.google.com/apis/credentials
 const API_KEY = "AIzaSyD3o2irj2vCFZf1teD7f7tqMX4-wmacJ28";
 
-// Health check — open http://localhost:3000 to verify server is running
+// Helper function to fetch security metadata
+async function getUrlMetadata(targetUrl) {
+  return new Promise((resolve) => {
+    const urlObj = new URL(targetUrl);
+    const protocol = urlObj.protocol === "https:" ? https : http;
+    
+    const options = {
+      method: "HEAD", // Just get headers
+      timeout: 5000,
+    };
+
+    const req = protocol.request(targetUrl, options, (res) => {
+      const headers = res.headers;
+      resolve({
+        https: urlObj.protocol === "https:",
+        hsts: !!headers["strict-transport-security"],
+        csp: !!headers["content-security-policy"],
+        xFrame: !!headers["x-frame-options"],
+        server: headers["server"] || "Unknown",
+        contentType: headers["content-type"] || "Unknown"
+      });
+    });
+
+    req.on("error", () => {
+      resolve({ https: urlObj.protocol === "https:", error: true });
+    });
+
+    req.on("timeout", () => {
+      req.destroy();
+      resolve({ https: urlObj.protocol === "https:", timeout: true });
+    });
+
+    req.end();
+  });
+}
+
+// Health check
 app.get("/", (req, res) => {
   res.json({ status: "CyberShield backend running", port: PORT });
 });
@@ -39,18 +75,14 @@ app.post("/check", async (req, res) => {
 
   console.log(`[SCAN] Checking: ${userUrl}`);
 
+  // 1. Fetch metadata (Headers/SSL)
+  const metadata = await getUrlMetadata(userUrl);
+
+  // 2. Check Google Safe Browsing
   const requestBody = {
-    client: {
-      clientId: "cybershield-hackathon",
-      clientVersion: "2.0"
-    },
+    client: { clientId: "cybershield-hackathon", clientVersion: "2.0" },
     threatInfo: {
-      threatTypes: [
-        "MALWARE",
-        "SOCIAL_ENGINEERING",
-        "UNWANTED_SOFTWARE",
-        "POTENTIALLY_HARMFUL_APPLICATION"
-      ],
+      threatTypes: ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION"],
       platformTypes: ["ANY_PLATFORM"],
       threatEntryTypes: ["URL"],
       threatEntries: [{ url: userUrl }]
@@ -69,25 +101,18 @@ app.post("/check", async (req, res) => {
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error(`[API ERROR] Status ${response.status}:`, errText);
-      return res.status(502).json({
-        error: `Google API error: ${response.status}`,
-        detail: errText
-      });
+      return res.status(502).json({ error: `Google API error: ${response.status}`, metadata });
     }
 
     const data = await response.json();
-    console.log(`[RESULT] Matches: ${data.matches ? data.matches.length : 0}`);
-    res.json(data);
+    res.json({ ...data, metadata });
 
   } catch (error) {
-    console.error("[FETCH ERROR]", error.message);
-    res.status(500).json({ error: "Backend fetch failed", detail: error.message });
+    res.status(500).json({ error: "Backend fetch failed", metadata });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`\n🛡️  CyberShield Backend`);
   console.log(`🚀  Running at http://localhost:${PORT}`);
-  console.log(`📡  POST /check to scan a URL\n`);
-});
+});

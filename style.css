@@ -620,3 +620,109 @@ input[type="text"]:focus {
 @media (max-width: 380px) {
   .team-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ════════════════════════════
+   SCORECARD & TRUST SCORE
+   ════════════════════════════ */
+.scorecard-wrap {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scorecard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scorecard-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.trust-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trust-percent {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffb4, #2dd4bf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.trust-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.score-item {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.score-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.score-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.score-val {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Grade Badges */
+.grade {
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+.grade-a { background: rgba(0, 255, 180, 0.15); color: #00ffb4; border: 1px solid rgba(0, 255, 180, 0.3); }
+.grade-b { background: rgba(45, 212, 191, 0.15); color: #2dd4bf; border: 1px solid rgba(45, 212, 191, 0.3); }
+.grade-c { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+.grade-f { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.status-icon { width: 14px; height: 14px; }
+.status-ok { color: #00ffb4; }
+.status-no { color: #ef4444; }
+
+@media (max-width: 480px) {
+  .score-grid { grid-template-columns: 1fr 1fr; }
+}
