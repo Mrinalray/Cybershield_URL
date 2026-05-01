@@ -9,7 +9,6 @@ window.addEventListener('load', () => {
     setTimeout(() => {
       loader.style.display = 'none';
       main.classList.remove('hidden');
-      loadHistory(); // ← restore history after page reveals
     }, 500);
   }, 3200);
 });
@@ -24,6 +23,8 @@ const team = [
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy", img: "Arpita.jpg" },
   { name: "Disha Samanta", img: "Disha.jpg" },
+  { name: "Arpita Roy",    img: "Arpita.jpg"   },
+   {name: "Disha Samanta",     img: "Disha.jpg" },
 ];
 
 (function buildTeam() {
@@ -41,6 +42,7 @@ const team = [
   }).join('');
 })();
 
+// Team state: default HIDDEN (collapsed), stays hidden on refresh
 let teamOpen = false;
 
 function toggleTeam() {
@@ -131,12 +133,10 @@ async function checkSecurity() {
       updateStats('danger');
       showResult('danger', 'Threat Detected!',
         'This URL is flagged as dangerous. Do not visit it.', url, threats);
-      saveToHistory({ url, type: 'danger', title: 'Threat Detected', threats });
     } else {
       updateStats('safe');
       showResult('safe', 'URL is Safe',
         'No threats detected. Google Safe Browsing found no issues.', url, []);
-      saveToHistory({ url, type: 'safe', title: 'Safe', threats: [] });
     }
 
   } catch (err) {
@@ -144,7 +144,6 @@ async function checkSecurity() {
       `Make sure your backend server is running.<br>
        <small style="color:#334155">Error: ${err.message}</small>`,
       '', []);
-    // Do not save failed/error scans to history
   } finally {
     btn.disabled = false;
   }
@@ -305,3 +304,4 @@ window.matchMedia("(prefers-color-scheme: dark)")
       applyTheme(e.matches ? "dark" : "light");
     }
   });
+});
