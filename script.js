@@ -4,7 +4,7 @@
 window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
-    const main   = document.getElementById('mainPage');
+    const main = document.getElementById('mainPage');
     loader.classList.add('fade-out');
     setTimeout(() => {
       loader.style.display = 'none';
@@ -19,11 +19,11 @@ window.addEventListener('load', () => {
 //  TEAM — collapsible
 // ════════════════════════════
 const team = [
-  { name: "Mrinal Roy",    img: "Mrinal.jpg"   },
-  { name: "Rahul Sah",     img: "Rahul.jpg"    },
+  { name: "Mrinal Roy", img: "Mrinal.jpg" },
+  { name: "Rahul Sah", img: "Rahul.jpg" },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
-  { name: "Arpita Roy",    img: "Arpita.jpg"   },
-  { name: "Disha Samanta", img: "Disha.jpg"    },
+  { name: "Arpita Roy", img: "Arpita.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg" },
 ];
 
 (function buildTeam() {
@@ -45,7 +45,7 @@ let teamOpen = false;
 
 function toggleTeam() {
   teamOpen = !teamOpen;
-  const wrap   = document.getElementById('teamGridWrap');
+  const wrap = document.getElementById('teamGridWrap');
   const toggle = document.getElementById('teamToggle');
   if (teamOpen) {
     wrap.classList.add('open');
@@ -71,10 +71,10 @@ function fillExample(url) {
 
 function updateStats(type) {
   totalScans++;
-  if (type === 'safe')   safeCount++;
+  if (type === 'safe') safeCount++;
   if (type === 'danger') dangerCount++;
-  document.getElementById('totalScans').textContent  = totalScans;
-  document.getElementById('safeCount').textContent   = safeCount;
+  document.getElementById('totalScans').textContent = totalScans;
+  document.getElementById('safeCount').textContent = safeCount;
   document.getElementById('dangerCount').textContent = dangerCount;
 }
 
@@ -84,17 +84,17 @@ function showResult(type, title, desc, url, threats) {
     <div class="result-card ${type}">
       <div class="result-icon">
         ${type === 'loading'
-          ? '<div class="spinner"></div>'
-          : `<span>${icons[type]}</span>`}
+      ? '<div class="spinner"></div>'
+      : `<span>${icons[type]}</span>`}
       </div>
       <div class="result-body">
         <div class="result-title">${title}</div>
         <div class="result-desc">${desc}</div>
         ${url ? `<div class="result-url">${url}</div>` : ''}
         ${threats && threats.length
-          ? `<div class="threat-tags">${threats.map(t =>
-              `<span class="threat-tag">${t}</span>`).join('')}</div>`
-          : ''}
+      ? `<div class="threat-tags">${threats.map(t =>
+        `<span class="threat-tag">${t}</span>`).join('')}</div>`
+      : ''}
       </div>
     </div>`;
 }
@@ -212,8 +212,8 @@ function formatDate(iso) {
 }
 
 function renderHistory(history) {
-  const list     = document.getElementById('historyList');
-  const emptyEl  = document.getElementById('historyEmpty');
+  const list = document.getElementById('historyList');
+  const emptyEl = document.getElementById('historyEmpty');
   const clearBtn = document.getElementById('clearHistoryBtn');
 
   list.innerHTML = '';
@@ -228,11 +228,11 @@ function renderHistory(history) {
   clearBtn.style.display = 'flex';
 
   history.forEach((item, idx) => {
-    const isSafe   = item.type === 'safe';
-    const icon     = isSafe ? '✓' : '✕';
-    const label    = isSafe ? 'Safe' : 'Threat';
+    const isSafe = item.type === 'safe';
+    const icon = isSafe ? '✓' : '✕';
+    const label = isSafe ? 'Safe' : 'Threat';
     const tagClass = isSafe ? 'history-tag--safe' : 'history-tag--danger';
-    const threats  = item.threats && item.threats.length
+    const threats = item.threats && item.threats.length
       ? item.threats.map(t => `<span class="threat-tag" style="font-size:10px;padding:2px 8px">${t}</span>`).join('')
       : '';
 
@@ -266,3 +266,42 @@ function renderHistory(history) {
 function loadHistory() {
   renderHistory(getHistory());
 }
+
+const toggleBtn = document.getElementById("themeToggle");
+const body = document.body;
+
+function applyTheme(theme) {
+  body.classList.remove("dark", "light");
+  body.classList.add(theme);
+
+  toggleBtn.textContent = theme === "dark" ? "🌙" : "☀️";
+  localStorage.setItem("theme", theme);
+}
+
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+  applyTheme(savedTheme);
+} else {
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(systemDark ? "dark" : "light");
+}
+
+toggleBtn.addEventListener("click", () => {
+  const isDark = body.classList.contains("dark");
+  applyTheme(isDark ? "light" : "dark");
+
+  toggleBtn.style.transform = "rotate(180deg)";
+  setTimeout(() => {
+    toggleBtn.style.transform = "rotate(0deg)";
+  }, 300);
+});
+
+
+window.matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", (e) => {
+   
+    if (!localStorage.getItem("theme")) {
+      applyTheme(e.matches ? "dark" : "light");
+    }
+  });
