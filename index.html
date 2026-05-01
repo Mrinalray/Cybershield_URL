@@ -33,6 +33,8 @@
           <div class="dot"></div>
           CyberShield
         </div>
+        <button id="themeToggle" class="theme-toggle" title="Toggle Theme">🌙</button>
+        
         <h1>Is This URL<br><span>Safe to Visit?</span></h1>
         <p class="subtitle">Real-time threat detection powered by Google Safe Browsing API. Scans for phishing, malware &amp; social engineering.</p>
       </header>
@@ -64,6 +66,15 @@
         </div>
 
         <div id="result"></div>
+
+        <!-- Recent Scans -->
+        <div class="recent-scans-container hidden" id="recentScansContainer">
+          <div class="recent-scans-header">
+            <span class="recent-scans-title">Recent Scans</span>
+            <button class="clear-history-btn" onclick="clearHistory()">Clear History</button>
+          </div>
+          <div class="recent-scans-list" id="recentScansList"></div>
+        </div>
       </div>
 
       <!-- Stats -->

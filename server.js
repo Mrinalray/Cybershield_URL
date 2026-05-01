@@ -16,7 +16,9 @@ app.use(cors({
 app.use(express.json());
 
 // ⚠️ IMPORTANT: Replace this with a NEW API key from Google Cloud Console
-const API_KEY = "AIzaSyD3o2irj2vCFZf1teD7f7tqMX4-wmacJ28";
+// Your old key was exposed publicly — revoke it immediately at:
+// https://console.cloud.google.com/apis/credentials
+const  API_KEY = process.env.API_KEY;
 
 // Helper function to fetch security metadata
 async function getUrlMetadata(targetUrl) {
@@ -115,4 +117,5 @@ app.post("/check", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`\n🛡️  CyberShield Backend`);
   console.log(`🚀  Running at http://localhost:${PORT}`);
-});
+  console.log(`📡  POST /check to scan a URL\n`);
+});
