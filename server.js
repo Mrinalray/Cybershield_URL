@@ -16,7 +16,7 @@ app.use(express.json());
 // ⚠️ IMPORTANT: Replace this with a NEW API key from Google Cloud Console
 // Your old key was exposed publicly — revoke it immediately at:
 // https://console.cloud.google.com/apis/credentials
-const API_KEY = "AIzaSyD3o2irj2vCFZf1teD7f7tqMX4-wmacJ28";
+const  API_KEY = process.env.API_KEY;
 
 // Health check — open http://localhost:3000 to verify server is running
 app.get("/", (req, res) => {
