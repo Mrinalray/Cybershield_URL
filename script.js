@@ -9,6 +9,7 @@ window.addEventListener('load', () => {
     setTimeout(() => {
       loader.style.display = 'none';
       main.classList.remove('hidden');
+      loadHistory(); // ← restore history after page reveals
     }, 500);
   }, 3200);
 });
@@ -22,7 +23,7 @@ const team = [
   { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-   {name: "Disha Samanta",     img: "Disha.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg"    },
 ];
 
 (function buildTeam() {
@@ -40,7 +41,6 @@ const team = [
   }).join('');
 })();
 
-// Team state: default HIDDEN (collapsed), stays hidden on refresh
 let teamOpen = false;
 
 function toggleTeam() {
@@ -142,6 +142,7 @@ async function checkSecurity() {
       `Make sure your backend server is running.<br>
        <small style="color:#334155">Error: ${err.message}</small>`,
       '', []);
+    // Do not save failed/error scans to history
   } finally {
     btn.disabled = false;
   }

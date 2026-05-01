@@ -91,6 +91,35 @@
         </div>
       </div>
 
+      <!-- ── NEW: Scan History ── -->
+      <div class="history-section" id="historySection">
+        <div class="history-top">
+          <div class="history-top-left">
+            <div class="section-tag">Scan History</div>
+            <h2 class="history-title">Previous Scans</h2>
+            <p class="history-sub">Saved locally — persists after page refresh.</p>
+          </div>
+          <button class="clear-history-btn" id="clearHistoryBtn" onclick="clearHistory()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14H6L5 6"/>
+              <path d="M10 11v6M14 11v6"/>
+              <path d="M9 6V4h6v2"/>
+            </svg>
+            Clear All
+          </button>
+        </div>
+
+        <div class="history-empty" id="historyEmpty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="opacity:0.3;margin-bottom:10px">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <p>No scans yet. Results will appear here automatically.</p>
+        </div>
+
+        <div class="history-list" id="historyList"></div>
+      </div>
+
       <!-- Features -->
       <div class="features">
         <div class="feature-item">
@@ -118,14 +147,12 @@
           <p class="team-sub">The people who made CyberShield possible</p>
         </div>
 
-        <!-- Toggle arrow button -->
         <button class="team-toggle" id="teamToggle" onclick="toggleTeam()" aria-label="Show team">
           <svg id="toggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
         </button>
 
-        <!-- Collapsible grid -->
         <div class="team-grid-wrap" id="teamGridWrap">
           <div class="team-grid" id="teamGrid"></div>
         </div>
