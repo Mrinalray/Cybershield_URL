@@ -9,7 +9,6 @@ window.addEventListener('load', () => {
     setTimeout(() => {
       loader.style.display = 'none';
       main.classList.remove('hidden');
-      loadHistory(); // ← restore history after page reveals
     }, 500);
   }, 3200);
 });
@@ -23,7 +22,7 @@ const team = [
   { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-  { name: "Disha Samanta", img: "Disha.jpg"    },
+   {name: "Disha Samanta",     img: "Disha.jpg" },
 ];
 
 (function buildTeam() {
@@ -41,6 +40,7 @@ const team = [
   }).join('');
 })();
 
+// Team state: default HIDDEN (collapsed), stays hidden on refresh
 let teamOpen = false;
 
 function toggleTeam() {
@@ -131,12 +131,10 @@ async function checkSecurity() {
       updateStats('danger');
       showResult('danger', 'Threat Detected!',
         'This URL is flagged as dangerous. Do not visit it.', url, threats);
-      saveToHistory({ url, type: 'danger', title: 'Threat Detected', threats });
     } else {
       updateStats('safe');
       showResult('safe', 'URL is Safe',
         'No threats detected. Google Safe Browsing found no issues.', url, []);
-      saveToHistory({ url, type: 'safe', title: 'Safe', threats: [] });
     }
 
   } catch (err) {
@@ -144,7 +142,6 @@ async function checkSecurity() {
       `Make sure your backend server is running.<br>
        <small style="color:#334155">Error: ${err.message}</small>`,
       '', []);
-    // Do not save failed/error scans to history
   } finally {
     btn.disabled = false;
   }
@@ -153,116 +150,3 @@ async function checkSecurity() {
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkSecurity();
 });
-
-
-// ════════════════════════════
-//  SCAN HISTORY  (localStorage)
-// ════════════════════════════
-const HISTORY_KEY = 'cybershield_scan_history';
-const MAX_HISTORY = 50;
-
-function saveToHistory(scan) {
-  let history = getHistory();
-
-  // Remove any previous entry for the same URL (de-duplicate)
-  history = history.filter(item => item.url !== scan.url);
-
-  // Attach timestamp and prepend
-  scan.scannedAt = new Date().toISOString();
-  history.unshift(scan);
-
-  // Cap to MAX_HISTORY
-  if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
-
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  renderHistory(history);
-}
-
-function getHistory() {
-  try {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function clearHistory() {
-  localStorage.removeItem(HISTORY_KEY);
-  renderHistory([]);
-}
-
-function deleteSingleEntry(url) {
-  const history = getHistory().filter(item => item.url !== url);
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  renderHistory(history);
-}
-
-function rescanUrl(url) {
-  document.getElementById('urlInput').value = url;
-  document.getElementById('urlInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setTimeout(() => checkSecurity(), 300);
-}
-
-function formatDate(iso) {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    month: 'short', day: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
-}
-
-function renderHistory(history) {
-  const list     = document.getElementById('historyList');
-  const emptyEl  = document.getElementById('historyEmpty');
-  const clearBtn = document.getElementById('clearHistoryBtn');
-
-  list.innerHTML = '';
-
-  if (!history || history.length === 0) {
-    emptyEl.style.display = 'flex';
-    clearBtn.style.display = 'none';
-    return;
-  }
-
-  emptyEl.style.display = 'none';
-  clearBtn.style.display = 'flex';
-
-  history.forEach((item, idx) => {
-    const isSafe   = item.type === 'safe';
-    const icon     = isSafe ? '✓' : '✕';
-    const label    = isSafe ? 'Safe' : 'Threat';
-    const tagClass = isSafe ? 'history-tag--safe' : 'history-tag--danger';
-    const threats  = item.threats && item.threats.length
-      ? item.threats.map(t => `<span class="threat-tag" style="font-size:10px;padding:2px 8px">${t}</span>`).join('')
-      : '';
-
-    const card = document.createElement('div');
-    card.className = `history-card history-card--${item.type}`;
-    card.style.animationDelay = `${idx * 35}ms`;
-    card.innerHTML = `
-      <div class="hc-icon-wrap hc-icon-wrap--${item.type}">${icon}</div>
-      <div class="hc-body">
-        <div class="hc-url" title="${item.url}">${item.url}</div>
-        ${threats ? `<div class="hc-threats">${threats}</div>` : ''}
-      </div>
-      <div class="hc-meta">
-        <span class="hc-badge ${tagClass}">${label}</span>
-        <span class="hc-date">${formatDate(item.scannedAt)}</span>
-        <button class="hc-btn hc-btn--rescan" title="Re-scan" onclick="rescanUrl('${item.url.replace(/'/g, "\\'")}')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-          </svg>
-        </button>
-        <button class="hc-btn hc-btn--delete" title="Remove" onclick="deleteSingleEntry('${item.url.replace(/'/g, "\\'")}')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>`;
-    list.appendChild(card);
-  });
-}
-
-function loadHistory() {
-  renderHistory(getHistory());
-}
