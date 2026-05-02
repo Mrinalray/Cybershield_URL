@@ -1,4 +1,59 @@
-// ════════════════════════════
+const API_BASE = "https://google-hackathon-bqrh.onrender.com";
+
+async function checkSecurity() {
+  const input = document.getElementById('urlInput').value.trim();
+
+  if (!input) {
+    showResult('error', 'Enter a URL', 'Please type a URL.', '', []);
+    return;
+  }
+
+  let url = input;
+  if (!url.startsWith('http')) {
+    url = 'https://' + url;
+  }
+
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true;
+
+  showResult('loading', 'Scanning...', 'Please wait...', url, []);
+
+  try {
+    const response = await fetch(`${API_BASE}/check`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ url })
+    });
+
+    const data = await response.json();
+    const metadata = data.metadata || {};
+
+    if (data.matches && data.matches.length > 0) {
+      const threats = [...new Set(
+        data.matches.map(m => m.threatType.replace(/_/g, ' '))
+      )];
+
+      updateStats('danger');
+
+      showResult('danger', 'Threat Detected!',
+        'This URL is dangerous.', url, threats, metadata);
+
+    } else {
+      updateStats('safe');
+
+      showResult('safe', 'URL is Safe',
+        'No threats found.', url, [], metadata);
+    }
+
+  } catch (err) {
+    showResult('error', 'Scan Failed',
+      err.message, '', []);
+  }
+
+  btn.disabled = false;
+}// ════════════════════════════
 //  LOADER
 // ════════════════════════════
 window.addEventListener('load', () => {
