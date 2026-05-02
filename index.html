@@ -73,7 +73,7 @@
           <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
         </div>
 
-        <div id="result"></div>
+        <div id="result" aria-live="polite"></div>
         </div>
 
         <!-- Bulk URL panel -->
@@ -99,13 +99,13 @@
             </div>
             <div class="bulk-progress-bar"><div class="bulk-progress-fill" id="bulkProgressFill"></div></div>
           </div>
-          <div id="bulkResult"></div>
+          <div id="bulkResult" aria-live="polite"></div>
         </div>
 
       </div>
 
       <!-- Stats -->
-      <div class="stats-row">
+      <div class="stats-row" aria-live="polite">
         <div class="stat-card">
           <div class="stat-num" id="totalScans">0</div>
           <div class="stat-label">URLs Scanned</div>
