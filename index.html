@@ -39,6 +39,15 @@
 
       <!-- Scanner -->
       <div class="scanner-card">
+
+        <!-- Tab switcher -->
+        <div class="scan-tabs">
+          <button class="scan-tab active" id="tabSingle" onclick="switchTab('single')">Single URL</button>
+          <button class="scan-tab" id="tabBulk" onclick="switchTab('bulk')">Bulk Scan</button>
+        </div>
+
+        <!-- Single URL panel -->
+        <div id="panelSingle">
         <div class="input-row">
           <div class="input-wrap">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -64,6 +73,34 @@
         </div>
 
         <div id="result"></div>
+        </div>
+
+        <!-- Bulk URL panel -->
+        <div id="panelBulk" class="hidden">
+          <div class="bulk-input-header">
+            <span class="bulk-input-label">URLs to scan</span>
+            <div class="bulk-input-actions">
+              <span class="bulk-url-count" id="bulkUrlCount">0 URLs</span>
+              <button class="bulk-clear-btn" onclick="document.getElementById('bulkInput').value='';updateBulkCount()">Clear</button>
+            </div>
+          </div>
+          <textarea id="bulkInput" placeholder="Paste URLs here, one per line&#10;&#10;https://google.com&#10;https://github.com&#10;http://testsafebrowsing.appspot.com/s/phishing.html" rows="7" oninput="updateBulkCount()"></textarea>
+          <button class="scan-btn bulk-scan-btn" id="bulkScanBtn" onclick="runBulkScan()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            Scan All URLs
+          </button>
+          <div id="bulkProgress" class="bulk-progress hidden">
+            <div class="bulk-progress-info">
+              <span id="bulkProgressLabel">Scanning…</span>
+              <span id="bulkProgressText">0 / 0</span>
+            </div>
+            <div class="bulk-progress-bar"><div class="bulk-progress-fill" id="bulkProgressFill"></div></div>
+          </div>
+          <div id="bulkResult"></div>
+        </div>
+
       </div>
 
       <!-- Stats -->
