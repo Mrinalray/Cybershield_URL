@@ -4,7 +4,7 @@ const https = require("https");
 const http = require("http");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // CORS — allows your frontend to connect
 app.use(cors({
