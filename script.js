@@ -231,8 +231,13 @@ function switchTab(tab) {
   const isBulk = tab === 'bulk';
   document.getElementById('panelSingle').classList.toggle('hidden', isBulk);
   document.getElementById('panelBulk').classList.toggle('hidden', !isBulk);
-  document.getElementById('tabSingle').classList.toggle('active', !isBulk);
-  document.getElementById('tabBulk').classList.toggle('active', isBulk);
+  
+  const tabS = document.getElementById('tabSingle');
+  const tabB = document.getElementById('tabBulk');
+  tabS.classList.toggle('active', !isBulk);
+  tabS.setAttribute('aria-selected', !isBulk);
+  tabB.classList.toggle('active', isBulk);
+  tabB.setAttribute('aria-selected', isBulk);
 }
 
 function updateBulkCount() {
@@ -270,6 +275,7 @@ async function runBulkScan() {
 
   btn.disabled = true;
   progress.classList.remove('hidden');
+  progress.setAttribute('aria-valuenow', '0');
   fill.style.width = '0%';
   progText.textContent = `0 / ${urls.length}`;
   progLabel.textContent = 'Scanning…';
@@ -308,6 +314,7 @@ async function runBulkScan() {
         done++;
         const pct = Math.round((done / urls.length) * 100);
         fill.style.width = pct + '%';
+        progress.setAttribute('aria-valuenow', pct);
         progText.textContent = `${done} / ${urls.length}`;
         updateBtrRow(i, result);
       })
@@ -325,6 +332,7 @@ async function runBulkScan() {
 
   progLabel.textContent = 'Complete';
   fill.style.width = '100%';
+  progress.setAttribute('aria-valuenow', '100');
 
   const summary = document.createElement('div');
   summary.className = 'bulk-summary';
