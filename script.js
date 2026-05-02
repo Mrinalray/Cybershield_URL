@@ -4,12 +4,12 @@
 window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
-    const main   = document.getElementById('mainPage');
+    const main = document.getElementById('mainPage');
     loader.classList.add('fade-out');
     setTimeout(() => {
       loader.style.display = 'none';
       main.classList.remove('hidden');
-      loadHistory(); // ← restore history after page reveals
+      loadHistory();
     }, 500);
   }, 3200);
 });
@@ -34,18 +34,19 @@ const team = [
       <div class="member-card">
         <div class="member-avatar">
           <img src="${m.img}" alt="${m.name}"
-            onerror="this.parentElement.innerHTML='${initials}'">
+            onerror="this.parentElement.textContent='${initials}'">
         </div>
         <div class="member-name">${m.name}</div>
       </div>`;
   }).join('');
 })();
 
+// Team state: default HIDDEN (collapsed), stays hidden on refresh
 let teamOpen = false;
 
 function toggleTeam() {
   teamOpen = !teamOpen;
-  const wrap   = document.getElementById('teamGridWrap');
+  const wrap = document.getElementById('teamGridWrap');
   const toggle = document.getElementById('teamToggle');
   if (teamOpen) {
     wrap.classList.add('open');
@@ -71,10 +72,10 @@ function fillExample(url) {
 
 function updateStats(type) {
   totalScans++;
-  if (type === 'safe')   safeCount++;
+  if (type === 'safe') safeCount++;
   if (type === 'danger') dangerCount++;
-  document.getElementById('totalScans').textContent  = totalScans;
-  document.getElementById('safeCount').textContent   = safeCount;
+  document.getElementById('totalScans').textContent = totalScans;
+  document.getElementById('safeCount').textContent = safeCount;
   document.getElementById('dangerCount').textContent = dangerCount;
 }
 
@@ -84,17 +85,17 @@ function showResult(type, title, desc, url, threats) {
     <div class="result-card ${type}">
       <div class="result-icon">
         ${type === 'loading'
-          ? '<div class="spinner"></div>'
-          : `<span>${icons[type]}</span>`}
+      ? '<div class="spinner"></div>'
+      : `<span>${icons[type]}</span>`}
       </div>
       <div class="result-body">
         <div class="result-title">${title}</div>
         <div class="result-desc">${desc}</div>
         ${url ? `<div class="result-url">${url}</div>` : ''}
         ${threats && threats.length
-          ? `<div class="threat-tags">${threats.map(t =>
-              `<span class="threat-tag">${t}</span>`).join('')}</div>`
-          : ''}
+      ? `<div class="threat-tags">${threats.map(t =>
+        `<span class="threat-tag">${t}</span>`).join('')}</div>`
+      : ''}
       </div>
     </div>`;
 }
@@ -131,12 +132,10 @@ async function checkSecurity() {
       updateStats('danger');
       showResult('danger', 'Threat Detected!',
         'This URL is flagged as dangerous. Do not visit it.', url, threats);
-      saveToHistory({ url, type: 'danger', title: 'Threat Detected', threats });
     } else {
       updateStats('safe');
       showResult('safe', 'URL is Safe',
         'No threats detected. Google Safe Browsing found no issues.', url, []);
-      saveToHistory({ url, type: 'safe', title: 'Safe', threats: [] });
     }
 
   } catch (err) {
@@ -144,7 +143,6 @@ async function checkSecurity() {
       `Make sure your backend server is running.<br>
        <small style="color:#334155">Error: ${err.message}</small>`,
       '', []);
-    // Do not save failed/error scans to history
   } finally {
     btn.disabled = false;
   }
@@ -358,8 +356,8 @@ function formatDate(iso) {
 }
 
 function renderHistory(history) {
-  const list     = document.getElementById('historyList');
-  const emptyEl  = document.getElementById('historyEmpty');
+  const list = document.getElementById('historyList');
+  const emptyEl = document.getElementById('historyEmpty');
   const clearBtn = document.getElementById('clearHistoryBtn');
 
   list.innerHTML = '';
@@ -374,11 +372,11 @@ function renderHistory(history) {
   clearBtn.style.display = 'flex';
 
   history.forEach((item, idx) => {
-    const isSafe   = item.type === 'safe';
-    const icon     = isSafe ? '✓' : '✕';
-    const label    = isSafe ? 'Safe' : 'Threat';
+    const isSafe = item.type === 'safe';
+    const icon = isSafe ? '✓' : '✕';
+    const label = isSafe ? 'Safe' : 'Threat';
     const tagClass = isSafe ? 'history-tag--safe' : 'history-tag--danger';
-    const threats  = item.threats && item.threats.length
+    const threats = item.threats && item.threats.length
       ? item.threats.map(t => `<span class="threat-tag" style="font-size:10px;padding:2px 8px">${t}</span>`).join('')
       : '';
 
