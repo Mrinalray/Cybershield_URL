@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
   <title>CyberShield — URL Security Scanner</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -40,22 +39,13 @@
 
       <!-- Scanner -->
       <div class="scanner-card">
-
-        <!-- Tab switcher -->
-        <div class="scan-tabs" role="tablist">
-          <button class="scan-tab active" id="tabSingle" role="tab" aria-selected="true" onclick="switchTab('single')">Single URL</button>
-          <button class="scan-tab" id="tabBulk" role="tab" aria-selected="false" onclick="switchTab('bulk')">Bulk Scan</button>
-        </div>
-
-        <!-- Single URL panel -->
-        <div id="panelSingle">
         <div class="input-row">
           <div class="input-wrap">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
             </svg>
-            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false" aria-label="Enter URL to scan">
+            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false">
           </div>
           <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -67,54 +57,26 @@
 
         <div class="examples">
           <span class="examples-label">Try:</span>
-          <span class="example-chip" role="button" tabindex="0" onclick="fillExample('https://google.com')" onkeydown="if(event.key==='Enter')fillExample('https://google.com')">google.com</span>
-          <span class="example-chip" role="button" tabindex="0" onclick="fillExample('https://github.com')" onkeydown="if(event.key==='Enter')fillExample('https://github.com')">github.com</span>
-          <span class="example-chip" role="button" tabindex="0" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')" onkeydown="if(event.key==='Enter')fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')">phishing test</span>
-          <span class="example-chip" role="button" tabindex="0" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')" onkeydown="if(event.key==='Enter')fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
+          <span class="example-chip" onclick="fillExample('https://google.com')">google.com</span>
+          <span class="example-chip" onclick="fillExample('https://github.com')">github.com</span>
+          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')">phishing test</span>
+          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
         </div>
 
-        <div id="result" aria-live="polite" aria-atomic="true"></div>
-        </div>
-
-        <!-- Bulk URL panel -->
-        <div id="panelBulk" class="hidden">
-          <div class="bulk-input-header">
-            <span class="bulk-input-label">URLs to scan</span>
-            <div class="bulk-input-actions">
-              <span class="bulk-url-count" id="bulkUrlCount">0 URLs</span>
-              <button class="bulk-clear-btn" onclick="document.getElementById('bulkInput').value='';updateBulkCount()">Clear</button>
-            </div>
-          </div>
-          <textarea id="bulkInput" placeholder="Paste URLs here, one per line&#10;&#10;https://google.com&#10;https://github.com&#10;http://testsafebrowsing.appspot.com/s/phishing.html" rows="7" oninput="updateBulkCount()"></textarea>
-          <button class="scan-btn bulk-scan-btn" id="bulkScanBtn" onclick="runBulkScan()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            Scan All URLs
-          </button>
-          <div id="bulkProgress" class="bulk-progress hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="bulk-progress-info">
-              <span id="bulkProgressLabel">Scanning…</span>
-              <span id="bulkProgressText">0 / 0</span>
-            </div>
-            <div class="bulk-progress-bar"><div class="bulk-progress-fill" id="bulkProgressFill"></div></div>
-          </div>
-          <div id="bulkResult" aria-live="polite" aria-atomic="true"></div>
-        </div>
-
+        <div id="result"></div>
       </div>
 
       <!-- Stats -->
       <div class="stats-row">
-        <div class="stat-card" aria-live="polite" aria-atomic="true">
+        <div class="stat-card">
           <div class="stat-num" id="totalScans">0</div>
           <div class="stat-label">URLs Scanned</div>
         </div>
-        <div class="stat-card" aria-live="polite" aria-atomic="true">
+        <div class="stat-card">
           <div class="stat-num" id="safeCount">0</div>
           <div class="stat-label">Safe</div>
         </div>
-        <div class="stat-card" aria-live="polite" aria-atomic="true">
+        <div class="stat-card">
           <div class="stat-num" id="dangerCount">0</div>
           <div class="stat-label">Threats Blocked</div>
         </div>
@@ -166,6 +128,5 @@
   </div>
 
   <script src="script.js"></script>
-  <meta name="api-base" content="https://google-hackathon-bqrh.onrender.com">
 </body>
 </html>
