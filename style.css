@@ -1,4 +1,4 @@
-﻿* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
   color-scheme: dark;
@@ -395,9 +395,7 @@ input[type="text"]:focus {
   letter-spacing: 0.05em;
 }
 
-<<<<<<< HEAD
-/* â”€â”€ Spinner â”€â”€ */
-=======
+
 /* ── Recent Scans ── */
 .recent-scans-container {
   margin-top: 24px;
@@ -500,7 +498,7 @@ input[type="text"]:focus {
 }
 
 /* ── Spinner ── */
->>>>>>> upstream/main
+
 .spinner {
   width: 22px;
   height: 22px;
@@ -718,7 +716,7 @@ input[type="text"]:focus {
   color: #334155;
 }
 
-<<<<<<< HEAD
+
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SCAN HISTORY  â† NEW
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
@@ -907,7 +905,7 @@ z
 /* â”€â”€ Responsive â”€â”€ */
 =======
 /* ── Responsive ── */
->>>>>>> upstream/main
+
 @media (max-width: 600px) {
   .input-row  { flex-direction: column; }
   .stats-row  { grid-template-columns: repeat(2, 1fr); }
@@ -917,7 +915,6 @@ z
 
 @media (max-width: 380px) {
   .team-grid { grid-template-columns: repeat(2, 1fr); }
-<<<<<<< HEAD
 }
 
 
@@ -1184,63 +1181,3 @@ z
   .bulk-table th:nth-child(4),
   .btr-details { display: none; }
 }
-=======
-}
-
-/* ================= THEME SYSTEM ================= */
-
-/* Default (Light Theme Variables) */
-:root {
-  --bg: #f8fafc;
-  --text: #0f172a;
-  --card: rgba(0, 0, 0, 0.05);
-  --border: rgba(0, 0, 0, 0.1);
-}
-
-/* Dark Theme Override */
-body.dark {
-  --bg: #0f172a;
-  --text: #ffffff;
-  --card: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.15);
-}
-
-/* Apply Theme */
-body {
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* Glassmorphism consistency */
-.scanner-card,
-.stat-card,
-.history-section,
-.feature-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-}
-
-/* ================= THEME TOGGLE BUTTON ================= */
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  padding: 8px 10px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Hover effect */
-.theme-toggle:hover {
-  transform: scale(1.1);
-}
->>>>>>> upstream/main
