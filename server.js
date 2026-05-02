@@ -75,6 +75,14 @@ app.post("/check", async (req, res) => {
     return res.status(400).json({ error: "Invalid URL format" });
   }
 
+  // Check if domain actually exists
+  try {
+    const hostname = new URL(userUrl).hostname;
+    await dns.lookup(hostname);
+  } catch {
+    return res.status(200).json({ exists: false });
+  }
+  
   console.log(`[SCAN] Checking: ${userUrl}`);
 
   // 1. Fetch metadata (Headers/SSL)

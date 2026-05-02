@@ -9,6 +9,7 @@ window.addEventListener('load', () => {
     setTimeout(() => {
       loader.style.display = 'none';
       main.classList.remove('hidden');
+      loadHistory();
     }, 500);
   }, 3200);
 });
@@ -18,13 +19,11 @@ window.addEventListener('load', () => {
 //  TEAM — collapsible
 // ════════════════════════════
 const team = [
-  { name: "Mrinal Roy", img: "Mrinal.jpg" },
-  { name: "Rahul Sah", img: "Rahul.jpg" },
+  { name: "Mrinal Roy",    img: "Mrinal.jpg"   },
+  { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
-  { name: "Arpita Roy", img: "Arpita.jpg" },
-  { name: "Disha Samanta", img: "Disha.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-   {name: "Disha Samanta",     img: "Disha.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg"    },
 ];
 
 (function buildTeam() {
@@ -226,6 +225,152 @@ document.getElementById('urlInput').addEventListener('keydown', e => {
 
 
 // ════════════════════════════
+//  TAB SWITCHER
+// ════════════════════════════
+function switchTab(tab) {
+  const isBulk = tab === 'bulk';
+  document.getElementById('panelSingle').classList.toggle('hidden', isBulk);
+  document.getElementById('panelBulk').classList.toggle('hidden', !isBulk);
+  document.getElementById('tabSingle').classList.toggle('active', !isBulk);
+  document.getElementById('tabBulk').classList.toggle('active', isBulk);
+}
+
+function updateBulkCount() {
+  const lines = document.getElementById('bulkInput').value
+    .split('\n').map(l => l.trim()).filter(Boolean);
+  const n = new Set(lines).size;
+  const el = document.getElementById('bulkUrlCount');
+  el.textContent = n === 0 ? '0 URLs' : `${n} URL${n !== 1 ? 's' : ''}`;
+  el.className = 'bulk-url-count' + (n > 0 ? ' has-urls' : '');
+}
+
+
+// ════════════════════════════
+//  BULK SCANNER
+// ════════════════════════════
+async function runBulkScan() {
+  const raw = document.getElementById('bulkInput').value.trim();
+  if (!raw) return;
+
+  const urls = [...new Set(
+    raw.split('\n')
+       .map(l => l.trim())
+       .filter(Boolean)
+       .map(u => u.startsWith('http://') || u.startsWith('https://') ? u : 'https://' + u)
+  )];
+
+  if (urls.length === 0) return;
+
+  const btn       = document.getElementById('bulkScanBtn');
+  const progress  = document.getElementById('bulkProgress');
+  const fill      = document.getElementById('bulkProgressFill');
+  const progText  = document.getElementById('bulkProgressText');
+  const progLabel = document.getElementById('bulkProgressLabel');
+  const resultEl  = document.getElementById('bulkResult');
+
+  btn.disabled = true;
+  progress.classList.remove('hidden');
+  fill.style.width = '0%';
+  progText.textContent = `0 / ${urls.length}`;
+  progLabel.textContent = 'Scanning…';
+  buildRow._n = 0;
+
+  // Build skeleton table with "scanning" rows immediately
+  resultEl.innerHTML = `
+    <div class="bulk-table-wrap">
+      <table class="bulk-table">
+        <thead><tr><th>#</th><th>URL</th><th>Status</th><th>Threat Details</th></tr></thead>
+        <tbody id="bulkTbody">${
+          urls.map((url, i) => `
+            <tr class="btr btr--scanning" id="btr-${i}">
+              <td class="btr-num">${i + 1}</td>
+              <td class="btr-url" title="${url}">${url}</td>
+              <td><span class="btr-badge btr-badge--scanning"><span class="btr-dot"></span> Scanning</span></td>
+              <td class="btr-details">—</td>
+            </tr>`).join('')
+        }</tbody>
+      </table>
+    </div>`;
+
+  let done = 0;
+
+  await Promise.allSettled(
+    urls.map((url, i) =>
+      fetch('https://cybershield-sxz0.onrender.com/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      })
+      .then(r => r.ok ? r.json() : Promise.reject('Server error ' + r.status))
+      .then(data => ({ url, data }))
+      .catch(err => ({ url, error: String(err) }))
+      .then(result => {
+        done++;
+        const pct = Math.round((done / urls.length) * 100);
+        fill.style.width = pct + '%';
+        progText.textContent = `${done} / ${urls.length}`;
+        updateBtrRow(i, result);
+      })
+    )
+  );
+
+  // Final summary
+  const rows = document.querySelectorAll('#bulkTbody .btr');
+  let bSafe = 0, bDanger = 0, bError = 0;
+  rows.forEach(r => {
+    if (r.classList.contains('btr--safe'))   bSafe++;
+    if (r.classList.contains('btr--danger')) bDanger++;
+    if (r.classList.contains('btr--error'))  bError++;
+  });
+
+  progLabel.textContent = 'Complete';
+  fill.style.width = '100%';
+
+  const summary = document.createElement('div');
+  summary.className = 'bulk-summary';
+  summary.innerHTML = `
+    <span class="bs-chip bs-safe">🟢 ${bSafe} Safe</span>
+    <span class="bs-chip bs-danger">🔴 ${bDanger} Threat${bDanger !== 1 ? 's' : ''}</span>
+    ${bError ? `<span class="bs-chip bs-error">🟡 ${bError} Error${bError !== 1 ? 's' : ''}</span>` : ''}`;
+  resultEl.insertBefore(summary, resultEl.firstChild);
+
+  btn.disabled = false;
+}
+
+function updateBtrRow(i, { url, data, error }) {
+  const row = document.getElementById(`btr-${i}`);
+  if (!row) return;
+
+  if (error) {
+    row.className = 'btr btr--error';
+    row.querySelector('.btr-badge').outerHTML;
+    row.cells[2].innerHTML = '<span class="btr-badge btr-badge--error">🟡 Error</span>';
+    row.cells[3].textContent = error;
+    return;
+  }
+
+  if (data.matches && data.matches.length) {
+    const threats = [...new Set(data.matches.map(m => m.threatType.replace(/_/g, ' ')))];
+    row.className = 'btr btr--danger';
+    row.cells[2].innerHTML = '<span class="btr-badge btr-badge--danger">🔴 Dangerous</span>';
+    row.cells[3].innerHTML = threats.map(t =>
+      `<span class="threat-tag" style="font-size:10px;padding:2px 8px">${t}</span>`).join('');
+    updateStats('danger');
+    saveToHistory({ url, type: 'danger', title: 'Threat Detected', threats });
+  } else {
+    row.className = 'btr btr--safe';
+    row.cells[2].innerHTML = '<span class="btr-badge btr-badge--safe">🟢 Safe</span>';
+    row.cells[3].textContent = '—';
+    updateStats('safe');
+    saveToHistory({ url, type: 'safe', title: 'Safe', threats: [] });
+  }
+}
+
+buildRow._n = 0;
+function buildRow() {} // kept for counter reset only
+
+
+// ════════════════════════════
 //  SCAN HISTORY  (localStorage)
 // ════════════════════════════
 const HISTORY_KEY = 'cybershield_scan_history';
@@ -336,43 +481,3 @@ function renderHistory(history) {
 function loadHistory() {
   renderHistory(getHistory());
 }
-
-const toggleBtn = document.getElementById("themeToggle");
-const body = document.body;
-
-function applyTheme(theme) {
-  body.classList.remove("dark", "light");
-  body.classList.add(theme);
-
-  toggleBtn.textContent = theme === "dark" ? "🌙" : "☀️";
-  localStorage.setItem("theme", theme);
-}
-
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) {
-  applyTheme(savedTheme);
-} else {
-  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  applyTheme(systemDark ? "dark" : "light");
-}
-
-toggleBtn.addEventListener("click", () => {
-  const isDark = body.classList.contains("dark");
-  applyTheme(isDark ? "light" : "dark");
-
-  toggleBtn.style.transform = "rotate(180deg)";
-  setTimeout(() => {
-    toggleBtn.style.transform = "rotate(0deg)";
-  }, 300);
-});
-
-
-window.matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (e) => {
-   
-    if (!localStorage.getItem("theme")) {
-      applyTheme(e.matches ? "dark" : "light");
-    }
-  });
-});
