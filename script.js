@@ -114,7 +114,7 @@ async function checkSecurity() {
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
   try {
-    const response = await fetch('https://cybershield-sxz0.onrender.com/check', {
+    const response = await fetch('https://google-hackathon-bqrh.onrender.com/check"', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
