@@ -126,6 +126,13 @@ async function checkSecurity() {
     const data = await response.json();
     if (data.error) throw new Error(data.error);
 
+    if (data.exists === false) {
+      showResult('error', 'URL Does Not Exist',
+        'This domain could not be found. It may be misspelled or inactive.', url, []);
+      btn.disabled = false;
+      return;
+    }
+    
     if (data.matches && data.matches.length > 0) {
       const threats = [...new Set(data.matches.map(m => m.threatType.replace(/_/g, ' ')))];
       updateStats('danger');
