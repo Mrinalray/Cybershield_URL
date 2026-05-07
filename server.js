@@ -115,7 +115,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
         ok: false,
         fetchError: isTimeout
           ? `Google API request timed out after ${timeoutMs}ms`
-          : error.message
+          : "Google API network request failed"
       };
     } finally {
       clearTimeout(timeout);
