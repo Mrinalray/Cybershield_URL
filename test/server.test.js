@@ -17,6 +17,7 @@ async function runRequest(app, body, origin) {
       body: JSON.stringify(body)
     });
 
+    
     return {
       status: response.status,
       body: await response.json()
