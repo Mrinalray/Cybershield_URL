@@ -10,9 +10,32 @@ try {
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
-const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 5000);
-const REQUEST_RETRIES = Number(process.env.REQUEST_RETRIES || 2);
 const BASE_RETRY_DELAY_MS = 250;
+
+function toPositiveInteger(value, fallback) {
+  const parsed = Number(value);
+  if (Number.isInteger(parsed) && parsed > 0) {
+    return parsed;
+  }
+
+  return fallback;
+}
+
+function toNonNegativeInteger(value, fallback) {
+  const parsed = Number(value);
+  if (Number.isInteger(parsed) && parsed >= 0) {
+    return parsed;
+  }
+
+  return fallback;
+}
+
+function calculateRetryDelay(attempt) {
+  return BASE_RETRY_DELAY_MS * (attempt + 1);
+}
+
+const REQUEST_TIMEOUT_MS = toPositiveInteger(process.env.REQUEST_TIMEOUT_MS, 5000);
+const REQUEST_RETRIES = toNonNegativeInteger(process.env.REQUEST_RETRIES, 2);
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://cybershield-url.netlify.app",
   "http://localhost:3000",
@@ -63,7 +86,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
       const shouldRetry = retryableStatus.has(response.status) && attempt < maxRetries;
 
       if (shouldRetry) {
-        await sleep(BASE_RETRY_DELAY_MS * (attempt + 1));
+        await sleep(calculateRetryDelay(attempt));
         continue;
       }
 
@@ -77,7 +100,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
       const shouldRetry = attempt < maxRetries;
 
       if (shouldRetry) {
-        await sleep(BASE_RETRY_DELAY_MS * (attempt + 1));
+        await sleep(calculateRetryDelay(attempt));
         continue;
       }
 
@@ -99,8 +122,8 @@ function createApp(options = {}) {
   const app = express();
   const fetchImpl = options.fetchImpl || fetch;
   const apiKey = options.apiKey || API_KEY;
-  const timeoutMs = options.timeoutMs || REQUEST_TIMEOUT_MS;
-  const retries = options.retries ?? REQUEST_RETRIES;
+  const timeoutMs = toPositiveInteger(options.timeoutMs, REQUEST_TIMEOUT_MS);
+  const retries = toNonNegativeInteger(options.retries, REQUEST_RETRIES);
   const allowedOrigins = options.allowedOrigins || getAllowedOrigins();
 
   app.use(cors({
