@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 5000);
 const REQUEST_RETRIES = Number(process.env.REQUEST_RETRIES || 2);
+const BASE_RETRY_DELAY_MS = 250;
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://cybershield-url.netlify.app",
   "http://localhost:3000",
@@ -62,7 +63,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
       const shouldRetry = retryableStatus.has(response.status) && attempt < maxRetries;
 
       if (shouldRetry) {
-        await sleep(250 * (attempt + 1));
+        await sleep(BASE_RETRY_DELAY_MS * (attempt + 1));
         continue;
       }
 
@@ -76,7 +77,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
       const shouldRetry = attempt < maxRetries;
 
       if (shouldRetry) {
-        await sleep(250 * (attempt + 1));
+        await sleep(BASE_RETRY_DELAY_MS * (attempt + 1));
         continue;
       }
 
