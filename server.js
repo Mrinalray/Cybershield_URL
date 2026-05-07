@@ -11,6 +11,7 @@ try {
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
 const BASE_RETRY_DELAY_MS = 250;
+const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504]);
 
 function toPositiveInteger(value, fallback) {
   const parsed = Number(value);
@@ -31,7 +32,7 @@ function toNonNegativeInteger(value, fallback) {
 }
 
 function calculateRetryDelay(attempt) {
-  return BASE_RETRY_DELAY_MS * (attempt + 1);
+  return BASE_RETRY_DELAY_MS * Math.pow(2, attempt);
 }
 
 const REQUEST_TIMEOUT_MS = toPositiveInteger(process.env.REQUEST_TIMEOUT_MS, 5000);
@@ -61,8 +62,6 @@ function getAllowedOrigins() {
 }
 
 async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeoutMs, maxRetries) {
-  const retryableStatus = new Set([408, 429, 500, 502, 503, 504]);
-
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -83,7 +82,7 @@ async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeout
       }
 
       const detail = await response.text();
-      const shouldRetry = retryableStatus.has(response.status) && attempt < maxRetries;
+      const shouldRetry = RETRYABLE_STATUS_CODES.has(response.status) && attempt < maxRetries;
 
       if (shouldRetry) {
         await sleep(calculateRetryDelay(attempt));
