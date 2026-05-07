@@ -58,7 +58,15 @@ function getAllowedOrigins() {
   return configured
     .split(",")
     .map((origin) => origin.trim())
-    .filter(Boolean);
+    .filter((origin) => origin.length > 0);
+}
+
+function sanitizeErrorDetail(message, fallback) {
+  if (process.env.NODE_ENV === "production") {
+    return fallback;
+  }
+
+  return message;
 }
 
 async function callSafeBrowsingWithRetry(fetchImpl, apiKey, requestBody, timeoutMs, maxRetries) {
@@ -185,13 +193,16 @@ function createApp(options = {}) {
     if (!result.ok) {
       if (result.fetchError) {
         console.error("[FETCH ERROR]", result.fetchError);
-        return res.status(500).json({ error: "Backend fetch failed", detail: result.fetchError });
+        return res.status(500).json({
+          error: "Backend fetch failed",
+          detail: sanitizeErrorDetail(result.fetchError, "Failed to contact Safe Browsing API")
+        });
       }
 
       console.error(`[API ERROR] Status ${result.status}:`, result.detail);
       return res.status(502).json({
         error: `Google API error: ${result.status}`,
-        detail: result.detail
+        detail: sanitizeErrorDetail(result.detail, "Safe Browsing API request failed")
       });
     }
 
