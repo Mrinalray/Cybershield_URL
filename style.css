@@ -733,9 +733,12 @@ input[type="text"]:focus {
 
 .footer-content {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 80px;
   margin-bottom: 60px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer-brand .logo-badge {
@@ -744,11 +747,11 @@ input[type="text"]:focus {
 }
 
 .footer-brand p {
-  margin-top: 20px;
-  font-size: 15px;
+  margin-top: 16px;
+  font-size: 14px;
   color: var(--subtitle-color);
-  max-width: 320px;
-  line-height: 1.7;
+  max-width: 280px;
+  line-height: 1.6;
 }
 
 .footer-links {
@@ -757,25 +760,27 @@ input[type="text"]:focus {
 }
 
 .footer-col h4 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--accent-1);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 20px;
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
 }
 
 .footer-col a {
   display: block;
   font-size: 14px;
-  color: var(--subtitle-color);
+  color: var(--text-color);
+  opacity: 0.7;
   text-decoration: none;
   margin-bottom: 12px;
-  transition: color 0.2s, transform 0.2s;
+  transition: all 0.2s;
 }
 
 .footer-col a:hover {
   color: var(--accent-1);
+  opacity: 1;
   transform: translateX(4px);
 }
 
