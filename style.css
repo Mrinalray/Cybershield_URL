@@ -15,17 +15,17 @@
 
 .light-mode {
   --bg-color: #f8fafc;
-  --text-color: #0f172a;
-  --accent-1: #10b981;
-  --accent-2: #0ea5e9;
+  --text-color: #000000;
+  --accent-1: #059669;
+  --accent-2: #0284c7;
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
-  --subtitle-color: #475569;
-  --label-color: #64748b;
+  --subtitle-color: #1a1a1a;
+  --label-color: #333333;
   --input-bg: #f1f5f9;
   --input-border: #cbd5e1;
-  --header-badge-bg: rgba(16, 185, 129, 0.1);
-  --header-badge-border: rgba(16, 185, 129, 0.2);
+  --header-badge-bg: rgba(5, 150, 105, 0.1);
+  --header-badge-border: rgba(5, 150, 105, 0.2);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
