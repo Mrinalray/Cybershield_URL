@@ -16,16 +16,16 @@
 .light-mode {
   --bg-color: #f8fafc;
   --text-color: #000000;
-  --accent-1: #059669;
-  --accent-2: #0284c7;
+  --accent-1: #f97316;
+  --accent-2: #ef4444;
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
   --subtitle-color: #1a1a1a;
   --label-color: #333333;
   --input-bg: #f1f5f9;
   --input-border: #cbd5e1;
-  --header-badge-bg: rgba(5, 150, 105, 0.1);
-  --header-badge-border: rgba(5, 150, 105, 0.2);
+  --header-badge-bg: rgba(249, 115, 22, 0.1);
+  --header-badge-border: rgba(249, 115, 22, 0.2);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,8 +54,8 @@ body::before {
 
 .light-mode body::before {
   background-image:
-    linear-gradient(rgba(16,185,129,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16,185,129,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(249, 115, 22, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249, 115, 22, 0.05) 1px, transparent 1px);
 }
 
 .hidden { display: none !important; }
