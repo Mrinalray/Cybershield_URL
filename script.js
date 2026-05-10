@@ -97,6 +97,8 @@ function showResult(type, title, desc, url, threats) {
     </div>`;
 }
 
+var arr=[];
+
 async function checkSecurity() {
   const input = document.getElementById('urlInput').value.trim();
   if (!input) {
@@ -107,11 +109,23 @@ async function checkSecurity() {
   let url = input;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     url = 'https://' + url;
+    url=url.toLowerCase();
   }
 
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
+
+  var i=arr.length;
+  var v=0;
+  for(v;v<i;v++){
+    if(arr[v]==url){
+      showResult('error', 'Already Scanned', 'Please type a different URL to scan above.', '', []);
+      btn.disabled = false;
+      return;
+    }
+  }
+  arr.push(url);
 
   try {
     const response = await fetch('https://cybershield-sxz0.onrender.com/check', {
