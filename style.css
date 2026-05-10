@@ -168,6 +168,7 @@ body::before {
 
 #loader.fade-out {
   animation: loaderFade 0.5s ease forwards;
+  pointer-events: none;
 }
 
 @keyframes loaderFade {
@@ -679,6 +680,7 @@ input[type="text"]:focus {
   border: 1px solid var(--card-border);
   border-radius: 18px;
   transition: all 0.2s;
+  width: 100%;
 }
 
 .member-card:hover {
@@ -729,6 +731,8 @@ input[type="text"]:focus {
   border-top: 1px solid var(--card-border);
   background: var(--footer-bg);
   border-radius: 40px 40px 0 0;
+  position: relative;
+  z-index: 10;
 }
 
 .footer-content {
