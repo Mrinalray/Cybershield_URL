@@ -19,81 +19,104 @@
 ---
 
 ## 🧠 How It Works
+![Main Page View](assets/cybershield_main_page.png)
 
-1.  🔗 **Enter URL**: Paste any suspicious link into the scanner.
-2.  ⚡ **Analyze**: The application instantly queries the Google Safe Browsing database.
-3.  📊 **Results**:
-    *   ✅ **SAFE**: No threats detected.
-    *   🚩 **DANGER**: Malicious content identified (Phishing, Malware, etc.).
+1. 🔗 **Enter URL**  
+   The user inputs a website link into the scanner.
+
+2. ⚡ **Send Request**  
+   The application sends the URL to the security API.
+
+3. 🛡️ **Threat Analysis**  
+   Google Safe Browsing analyzes the URL for:
+   - Phishing attacks  
+   - Malware  
+   - Social engineering threats  
+
+4. 📊 **Display Result**  
+   The system shows a clear result:
+   - ✅ **Safe** — No threats detected  
+   - ⚠️ **Potential Threat** — Risky or malicious content found  
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-| :--- | :--- |
-| **Frontend** | HTML5, Vanilla JavaScript |
-| **Styling** | CSS3 (Custom Properties, Grid, Flexbox) |
-| **Backend** | Node.js (API Proxy & Rate Limiting) |
-| **Security API** | Google Safe Browsing API |
-| **Persistence** | `localStorage` (Theme), `sessionStorage` (Loader) |
+| Layer        | Technology |
+|-------------|-----------|
+| Frontend     | HTML5 |
+| Styling      | CSS3 (Custom Properties, Responsive Design) |
+| Logic        | JavaScript (Vanilla JS) |
+| Backend      | Node.js (API Handling) |
+| Security API | Google Safe Browsing API |
+| Deployment   | Render / Netlify / GitHub Pages |
 
 ---
 
-## ⚙️ Setup & Installation
+## 📸 Preview
 
-### Prerequisites
-- Node.js (v14 or higher)
-- A Google Cloud API Key (with Safe Browsing API enabled)
-
-### Local Development
-
-1.  **Clone the Repository**:
-    ```bash
-    git clone https://github.com/Mrinalray/Cybershield_URL.git
-    cd Cybershield_URL
-    ```
-
-2.  **Install Dependencies**:
-    ```bash
-    npm install
-    ```
-
-3.  **Configure Environment**:
-    Create a `.env` file in the root directory:
-    ```env
-    API_KEY=your_google_api_key_here
-    PORT=3000
-    ```
-
-4.  **Run the Server**:
-    ```bash
-    node server.js
-    ```
-    Open `http://localhost:3000` in your browser.
+![CyberShield Preview](assets/cybershield_result.png)
 
 ---
 
-## 📂 Project Structure
+## 🔑 API Integration
 
-```text
-Cybershield_URL/
-├── public/           # Static assets (Images, Favicon)
-├── index.html        # Main scanner interface
-├── docs.html         # User documentation
-├── privacy.html      # Privacy policy
-├── terms.html        # Terms of service
-├── script.js         # Core application logic
-├── style.css         # Modern design system
-└── server.js         # Backend API handler
+This project uses:
+
+* Google Safe Browsing API
+
+  * Detects malicious URLs
+  * Requires API key from Google Cloud Console
+
+---
+
+## ⚙️ Setup Instructions
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Mrinalray/Cybershield_URL.git
+cd Cybershield_URL
 ```
 
+2. Add your API key:
+
+```js
+const API_KEY = "YOUR_API_KEY";
+```
+
+3. Run locally:
+
+* Open `index.html` in browser
+
 ---
 
-## 👨‍💻 Contributors
+## ⚠️ Important Notes
 
-*   **Mrinal Roy** — [GitHub](https://github.com/mrinalray)
-*   **Rahul Sah** — [GitHub](https://github.com/real-rahul1)
+* Do NOT expose your API key publicly
+* Use environment variables for production
+* This is a client-side demo (for hackathon/project use)
+
+---
+
+## 🚀 Future Improvements
+
+* 🔐 Email breach checker integration (HIBP API)
+* 📊 Threat analytics dashboard
+* 🌍 Browser extension support
+* 🤖 AI-based threat detection
+
+---
+
+## 👨‍💻 Author
+
+**Mrinal Roy**
+
+* GitHub: https://github.com/mrinalray
+  
+**Rahul Sah**
+  * GitHub: https://github.com/real-rahul1
+  
 
 ---
 
