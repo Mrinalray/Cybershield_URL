@@ -115,6 +115,7 @@ async function checkSecurity() {
 
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
+  document.getElementById('urlInput').disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
   var i=arr.length;
@@ -169,6 +170,7 @@ const response = await fetch(`${BASE_URL}/check`, {
       '', []);
   } finally {
     btn.disabled = false;
+    document.getElementById('urlInput').disabled = false; 
   }
 }
 
