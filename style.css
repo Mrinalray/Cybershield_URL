@@ -607,7 +607,7 @@ input[type="text"]:focus {
 .team-title {
   font-size: 28px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-color);
   margin-bottom: 8px;
   letter-spacing: -0.02em;
 }
@@ -634,7 +634,7 @@ input[type="text"]:focus {
 }
 
 .team-toggle:hover {
-  background: rgba(0,255,180,0.14);
+  background: var(--header-badge-border);
 }
 
 .team-toggle.open {
@@ -676,6 +676,7 @@ input[type="text"]:focus {
 }
 
 .member-card:hover {
+  background: var(--header-badge-bg);
   border-color: var(--accent-1);
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -698,7 +699,7 @@ input[type="text"]:focus {
 }
 
 .member-card:hover .member-avatar {
-  border-color: #00ffb4;
+  border-color: var(--accent-1);
 }
 
 .member-avatar img {
@@ -710,7 +711,7 @@ input[type="text"]:focus {
 .member-name {
   font-size: 13px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text-color);
   text-align: center;
   line-height: 1.4;
 }
