@@ -28,10 +28,14 @@ function toggleTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const toggleBtn = document.getElementById('themeToggle');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', toggleTheme);
-  }
+  const toggles = [
+    document.getElementById('themeToggle'),
+    document.getElementById('themeToggleFooter')
+  ];
+  
+  toggles.forEach(btn => {
+    if (btn) btn.addEventListener('click', toggleTheme);
+  });
 });
 
 
