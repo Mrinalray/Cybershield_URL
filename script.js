@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
 //  TEAM — collapsible
 
 const team = [
-  { name: "Mrinal Roy",    img: "Mrinal.jpg"   },
-  { name: "Rahul Sah",     img: "Rahul.jpg"    },
-  { name: "Swastika Shaw", img: "Swastika.jpg" },
-  { name: "Arpita Roy",    img: "Arpita.jpg"   },
-   {name: "Disha Samanta",     img: "Disha.jpg" },
+  { name: "Mrinal Roy",    img: "public/Mrinal.jpg"   },
+  { name: "Rahul Sah",     img: "public/Rahul.jpg"    },
+  { name: "Swastika Shaw", img: "public/Swastika.jpg" },
+  { name: "Arpita Roy",    img: "public/Arpita.jpg"   },
+  { name: "Disha Samanta", img: "public/Disha.jpg" },
 ];
 
 (function buildTeam() {
