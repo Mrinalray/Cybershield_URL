@@ -1,43 +1,87 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv")
-dotenv.config()
+const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+
+dotenv.config();
+
+const API_KEY = process.env.API_KEY;
+
+if (!API_KEY) {
+  console.error("\n[FATAL ERROR] API_KEY is missing in environment variables.");
+  console.error("Please create a .env file with your Google Safe Browsing API key.\n");
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Security headers
+app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'", "https://safebrowsing.googleapis.com"],
+    },
+  })
+);
+
+// CORS restricted to frontend domains (adjust as needed for production)
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5500", "http://127.0.0.1:5500"];
 
 app.use(cors({
-  origin: "*",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: "10kb" })); // Prevents large payload DoS
 
-
-const  API_KEY = process.env.API_KEY;
-
+// Rate limiter for scan endpoint
+const scanLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: "Too many scan requests from this IP, please try again later." }
+});
 
 app.get("/", (req, res) => {
   res.json({ status: "CyberShield backend running", port: PORT });
 });
 
-app.post("/check", async (req, res) => {
+app.post("/check", scanLimiter, async (req, res) => {
   const userUrl = req.body.url;
 
-  if (!userUrl) {
+  if (!userUrl || typeof userUrl !== 'string') {
     return res.status(400).json({ error: "No URL provided" });
   }
 
+  if (userUrl.length > 2048) {
+    return res.status(400).json({ error: "URL is too long" });
+  }
   
+  let validUrl;
   try {
-    new URL(userUrl);
+    validUrl = new URL(userUrl);
+    if (!['http:', 'https:'].includes(validUrl.protocol)) {
+      return res.status(400).json({ error: "Invalid URL protocol. Only HTTP and HTTPS are allowed." });
+    }
   } catch {
     return res.status(400).json({ error: "Invalid URL format" });
   }
-
-  console.log(`[SCAN] Checking: ${userUrl}`);
 
   const requestBody = {
     client: {
@@ -53,9 +97,12 @@ app.post("/check", async (req, res) => {
       ],
       platformTypes: ["ANY_PLATFORM"],
       threatEntryTypes: ["URL"],
-      threatEntries: [{ url: userUrl }]
+      threatEntries: [{ url: validUrl.href }]
     }
   };
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
   try {
     const response = await fetch(
@@ -63,31 +110,34 @@ app.post("/check", async (req, res) => {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
       }
     );
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
-      const errText = await response.text();
-      console.error(`[API ERROR] Status ${response.status}:`, errText);
+      // Don't leak exact Google API errors to client
+      console.error(`[API ERROR] Status ${response.status}:`, await response.text());
       return res.status(502).json({
-        error: `Google API error: ${response.status}`,
-        detail: errText
+        error: "Threat detection service is temporarily unavailable."
       });
     }
 
     const data = await response.json();
-    console.log(`[RESULT] Matches: ${data.matches ? data.matches.length : 0}`);
     res.json(data);
 
   } catch (error) {
+    clearTimeout(timeoutId);
     console.error("[FETCH ERROR]", error.message);
-    res.status(500).json({ error: "Backend fetch failed", detail: error.message });
+    if (error.name === 'AbortError') {
+      return res.status(504).json({ error: "Threat detection service timed out." });
+    }
+    res.status(500).json({ error: "Internal server error occurred during scan." });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`\n🛡️  CyberShield Backend`);
   console.log(`🚀  Running at http://localhost:${PORT}`);
-  console.log(`📡  POST /check to scan a URL\n`);
 });

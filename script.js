@@ -1,5 +1,4 @@
 //  LOADER
-
 window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
@@ -12,32 +11,37 @@ window.addEventListener('load', () => {
   }, 3200);
 });
 
-
 //  TEAM — collapsible
-
 const team = [
   { name: "Mrinal Roy",    img: "Mrinal.jpg"   },
   { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-   {name: "Disha Samanta",     img: "Disha.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg" },
 ];
+
+function sanitizeHTML(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 (function buildTeam() {
   const grid = document.getElementById('teamGrid');
   grid.innerHTML = team.map(m => {
-    const initials = m.name.split(' ').map(w => w[0]).join('');
+    const safeName = sanitizeHTML(m.name);
+    const safeImg = sanitizeHTML(m.img);
+    const initials = safeName.split(' ').map(w => w[0]).join('');
     return `
       <div class="member-card">
         <div class="member-avatar">
-          <img src="${m.img}" alt="${m.name}"
+          <img src="${safeImg}" alt="${safeName}"
             onerror="this.parentElement.innerHTML='${initials}'">
         </div>
-        <div class="member-name">${m.name}</div>
+        <div class="member-name">${safeName}</div>
       </div>`;
   }).join('');
 })();
-
 
 let teamOpen = false;
 
@@ -48,19 +52,27 @@ function toggleTeam() {
   if (teamOpen) {
     wrap.classList.add('open');
     toggle.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Hide team');
   } else {
     wrap.classList.remove('open');
     toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', 'Show team');
   }
 }
 
-
-
 //  SCANNER
+let totalScans = parseInt(localStorage.getItem('totalScans') || '0');
+let safeCount = parseInt(localStorage.getItem('safeCount') || '0');
+let dangerCount = parseInt(localStorage.getItem('dangerCount') || '0');
 
-let totalScans = 0, safeCount = 0, dangerCount = 0;
+function renderStats() {
+  document.getElementById('totalScans').textContent  = totalScans;
+  document.getElementById('safeCount').textContent   = safeCount;
+  document.getElementById('dangerCount').textContent = dangerCount;
+}
+renderStats();
 
 function fillExample(url) {
   document.getElementById('urlInput').value = url;
@@ -71,13 +83,24 @@ function updateStats(type) {
   totalScans++;
   if (type === 'safe')   safeCount++;
   if (type === 'danger') dangerCount++;
-  document.getElementById('totalScans').textContent  = totalScans;
-  document.getElementById('safeCount').textContent   = safeCount;
-  document.getElementById('dangerCount').textContent = dangerCount;
+  localStorage.setItem('totalScans', totalScans);
+  localStorage.setItem('safeCount', safeCount);
+  localStorage.setItem('dangerCount', dangerCount);
+  renderStats();
 }
 
 function showResult(type, title, desc, url, threats) {
   const icons = { safe: '✓', danger: '✕', loading: '', error: '!' };
+  const safeTitle = sanitizeHTML(title);
+  const safeDesc = sanitizeHTML(desc);
+  const safeUrl = sanitizeHTML(url);
+  
+  let threatsHtml = '';
+  if (threats && threats.length) {
+    threatsHtml = `<div class="threat-tags">${threats.map(t => 
+      `<span class="threat-tag">${sanitizeHTML(t)}</span>`).join('')}</div>`;
+  }
+
   document.getElementById('result').innerHTML = `
     <div class="result-card ${type}">
       <div class="result-icon">
@@ -86,13 +109,10 @@ function showResult(type, title, desc, url, threats) {
           : `<span>${icons[type]}</span>`}
       </div>
       <div class="result-body">
-        <div class="result-title">${title}</div>
-        <div class="result-desc">${desc}</div>
-        ${url ? `<div class="result-url">${url}</div>` : ''}
-        ${threats && threats.length
-          ? `<div class="threat-tags">${threats.map(t =>
-              `<span class="threat-tag">${t}</span>`).join('')}</div>`
-          : ''}
+        <div class="result-title">${safeTitle}</div>
+        <div class="result-desc">${safeDesc}</div>
+        ${safeUrl ? `<div class="result-url">${safeUrl}</div>` : ''}
+        ${threatsHtml}
       </div>
     </div>`;
 }
@@ -103,24 +123,41 @@ async function checkSecurity() {
     showResult('error', 'Enter a URL', 'Please type a URL to scan above.', '', []);
     return;
   }
+  
+  if (input.length > 2048) {
+    showResult('error', 'URL too long', 'The provided URL exceeds the maximum length allowed.', '', []);
+    return;
+  }
 
   let url = input;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
+    // Only prepend https if the input looks like a valid hostname, to prevent javascript: or data: injection
+    if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(url)) {
+      url = 'https://' + url;
+    }
   }
 
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
+  // Use relative URL so it works when deployed and for local dev, or fallback to localhost if file protocol
+  const backendUrl = window.location.protocol === 'file:' 
+    ? 'http://localhost:3000/check' 
+    : '/check';
+
   try {
-    const response = await fetch('https://cybershield-sxz0.onrender.com/check', {
+    const response = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
     });
 
-    if (!response.ok) throw new Error('Server error ' + response.status);
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || 'Server returned status ' + response.status);
+    }
+    
     const data = await response.json();
     if (data.error) throw new Error(data.error);
 
@@ -136,9 +173,8 @@ async function checkSecurity() {
     }
 
   } catch (err) {
-    showResult('error', 'Backend Not Connected',
-      `Make sure your backend server is running.<br>
-       <small style="color:#334155">Error: ${err.message}</small>`,
+    showResult('error', 'Scan Failed',
+      `An error occurred while scanning the URL. Make sure the backend server is running.`,
       '', []);
   } finally {
     btn.disabled = false;

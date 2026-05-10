@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberShield — URL Security Scanner</title>
+  <title>CyberShield | URL Scanner</title>
+  <meta name="description" content="CyberShield is a fast and secure URL scanner that uses Google Safe Browsing to detect malware and phishing sites.">
+  <meta property="og:title" content="CyberShield | URL Scanner">
+  <meta property="og:description" content="CyberShield is a fast and secure URL scanner that uses Google Safe Browsing to detect malware and phishing sites.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,19 +45,16 @@
       <!-- Scanner -->
       <div class="scanner-card">
         <div class="input-row">
-          <div class="input-wrap">
-            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
-            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false">
+          <div class="search-box">
+            <input type="text" id="urlInput" placeholder="https://example.com" aria-label="Enter URL to scan for threats">
+            <button id="scanBtn" onclick="checkSecurity()" aria-label="Scan URL">
+              <span>Scan</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
           </div>
-          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            Scan URL
-          </button>
         </div>
 
         <div class="examples">
