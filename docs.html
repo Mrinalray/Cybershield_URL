@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — CyberShield</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .docs-container {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+    }
+    h1 { color: var(--accent-1); margin-bottom: 32px; font-size: 36px; }
+    h2 { color: var(--text-color); margin-top: 40px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+    h3 { color: var(--accent-1); margin-top: 24px; margin-bottom: 12px; font-size: 18px; }
+    p, li { color: var(--subtitle-color); line-height: 1.8; margin-bottom: 16px; font-size: 15px; }
+    ul { padding-left: 20px; }
+    .back-link { 
+      display: inline-block; 
+      margin-bottom: 32px; 
+      color: var(--accent-1); 
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+    .back-link:hover { transform: translateX(-4px); }
+    .code-block {
+      background: var(--input-bg);
+      padding: 16px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--text-color);
+      border: 1px solid var(--input-border);
+      margin: 20px 0;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+    .safe-badge { background: var(--safe-bg); color: var(--safe-color); border: 1px solid var(--safe-border); }
+    .danger-badge { background: rgba(255,50,50,0.1); color: #f87171; border: 1px solid rgba(255,50,50,0.2); }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="docs-container">
+      <a href="index.html" class="back-link">← Back to Scanner</a>
+      <h1>Documentation</h1>
+      
+      <section id="intro">
+        <h2>Introduction</h2>
+        <p>CyberShield is a real-time URL security scanner designed to identify potentially harmful websites before you visit them. By leveraging the <strong>Google Safe Browsing API</strong>, CyberShield provides instant feedback on whether a link is associated with phishing, malware, or other social engineering threats.</p>
+      </section>
+
+      <section id="usage">
+        <h2>How to Use</h2>
+        <p>Using CyberShield is straightforward:</p>
+        <ul>
+          <li><strong>Step 1:</strong> Copy the URL you wish to check.</li>
+          <li><strong>Step 2:</strong> Paste it into the scanner input box on the home page.</li>
+          <li><strong>Step 3:</strong> Press <strong>Enter</strong> or click the <strong>Scan Now</strong> button.</li>
+          <li><strong>Step 4:</strong> Review the results and threat categories if flagged.</li>
+        </ul>
+      </section>
+
+      <section id="results">
+        <h2>Understanding Results</h2>
+        <p>CyberShield categorizes URLs into two main states:</p>
+        
+        <h3><span class="status-badge safe-badge">SAFE</span> No Threats Detected</h3>
+        <p>This means the URL is not currently listed in the Google Safe Browsing database as a threat. While highly reliable, we always recommend caution when visiting new or unfamiliar websites.</p>
+        
+        <h3><span class="status-badge danger-badge">DANGER</span> Threat Detected!</h3>
+        <p>The URL has been flagged as malicious. Common threat types include:</p>
+        <ul>
+          <li><strong>Malware:</strong> Sites that attempt to install harmful software on your device.</li>
+          <li><strong>Social Engineering (Phishing):</strong> Sites that try to trick you into revealing sensitive information (passwords, credit cards).</li>
+          <li><strong>Unwanted Software:</strong> Sites that encourage the download of deceptive programs.</li>
+        </ul>
+      </section>
+
+      <section id="developer">
+        <h2>For Developers</h2>
+        <p>To run CyberShield locally for development purposes, ensure you have Node.js installed and follow these steps:</p>
+        <div class="code-block">
+          git clone https://github.com/Mrinalray/Cybershield_URL.git<br>
+          cd Cybershield_URL<br>
+          npm install<br>
+          node server.js
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function initTheme() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') document.body.classList.add('light-mode');
+    })();
+  </script>
+</body>
+</html>
