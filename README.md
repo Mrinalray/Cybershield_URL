@@ -130,4 +130,4 @@ If you find this tool helpful:
 ---
 
 ## 📜 License
-This project is for educational and demonstration purposes. Powered by Google Safe Browsing.
+This project is for educational and demonstration purposes. See the [LICENSE](LICENSE.md) file for more details. Powered by Google Safe Browsing.
