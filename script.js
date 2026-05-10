@@ -1,13 +1,21 @@
 //  LOADER
 
-document.addEventListener('DOMContentLoaded', () => {   // ← fix: was window.addEventListener('load')
+document.addEventListener('DOMContentLoaded', () => {
+  const loader = document.getElementById('loader');
+  const main   = document.getElementById('mainPage');
+
+  if (sessionStorage.getItem('loaderShown')) {
+    if (loader) loader.style.display = 'none';
+    if (main) main.classList.remove('hidden');
+    return;
+  }
+
   setTimeout(() => {
-    const loader = document.getElementById('loader');
-    const main   = document.getElementById('mainPage');
-    loader.classList.add('fade-out');
+    if (loader) loader.classList.add('fade-out');
     setTimeout(() => {
-      loader.style.display = 'none';
-      main.classList.remove('hidden');
+      if (loader) loader.style.display = 'none';
+      if (main) main.classList.remove('hidden');
+      sessionStorage.setItem('loaderShown', 'true');
     }, 500);
   }, 3200);
 });

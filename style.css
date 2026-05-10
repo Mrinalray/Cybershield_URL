@@ -721,26 +721,31 @@ input[type="text"]:focus {
 
 /* ── Main Footer ── */
 .main-footer {
-  margin-top: 80px;
-  padding: 48px 0 24px;
+  margin-top: 100px;
+  padding: 64px 0 32px;
   border-top: 1px solid var(--card-border);
   background: var(--footer-bg);
-  border-radius: 32px 32px 0 0;
+  border-radius: 40px 40px 0 0;
 }
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  margin-bottom: 40px;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.footer-brand .logo-badge {
+  font-size: 14px;
+  padding: 8px 20px;
 }
 
 .footer-brand p {
-  margin-top: 16px;
-  font-size: 14px;
+  margin-top: 20px;
+  font-size: 15px;
   color: var(--subtitle-color);
-  max-width: 240px;
-  line-height: 1.6;
+  max-width: 320px;
+  line-height: 1.7;
 }
 
 .footer-links {
@@ -781,10 +786,11 @@ input[type="text"]:focus {
 
 .footer-bottom {
   text-align: center;
-  padding-top: 24px;
+  padding-top: 32px;
   border-top: 1px solid var(--card-border);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--label-color);
+  letter-spacing: 0.02em;
 }
 
 /* ── Responsive ── */
