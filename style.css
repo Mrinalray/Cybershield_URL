@@ -337,7 +337,7 @@ h1 span {
   width: 18px;
   height: 18px;
   opacity: 0.4;
-  color: #e2e8f0;
+  color: var(--text-color);
 }
 
 input[type="text"] {
@@ -356,8 +356,9 @@ input[type="text"] {
 input[type="text"]::placeholder { color: #475569; }
 
 input[type="text"]:focus {
-  border-color: rgba(0,255,180,0.4);
-  background: rgba(0,255,180,0.04);
+  border-color: var(--accent-1);
+  background: var(--input-bg);
+  box-shadow: 0 0 15px rgba(var(--accent-1-rgb), 0.1);
 }
 
 .scan-btn {
