@@ -404,9 +404,10 @@ input[type="text"]:focus {
 }
 
 .example-chip:hover {
-  background: rgba(0,255,180,0.08);
-  color: #00ffb4;
-  border-color: rgba(0,255,180,0.2);
+  background: var(--header-badge-bg);
+  border-color: var(--accent-1);
+  color: var(--accent-1);
+  transform: translateY(-1px);
 }
 
 /* ── Result ── */
@@ -558,6 +559,12 @@ input[type="text"]:focus {
   transition: transform 0.2s;
 }
 
+.feature-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
 .feature-icon { font-size: 20px; margin-bottom: 10px; }
 
 .feature-title {
@@ -669,9 +676,9 @@ input[type="text"]:focus {
 }
 
 .member-card:hover {
-  border-color: rgba(0,255,180,0.25);
-  background: rgba(0,255,180,0.04);
+  border-color: var(--accent-1);
   transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .member-avatar {
