@@ -63,8 +63,31 @@ function toggleTeam() {
 let totalScans = 0, safeCount = 0, dangerCount = 0;
 
 function fillExample(url) {
-  document.getElementById('urlInput').value = url;
-  document.getElementById('urlInput').focus();
+  const input = document.getElementById('urlInput');
+  input.value = url;
+  input.focus();
+  toggleClearBtn();
+}
+
+const urlInput = document.getElementById('urlInput');
+const clearBtn = document.getElementById('clearInput');
+
+function toggleClearBtn() {
+  if (clearBtn) {
+    clearBtn.style.display = urlInput.value ? 'flex' : 'none';
+  }
+}
+
+if (urlInput) {
+  urlInput.addEventListener('input', toggleClearBtn);
+}
+
+if (clearBtn) {
+  clearBtn.addEventListener('click', () => {
+    urlInput.value = '';
+    toggleClearBtn();
+    urlInput.focus();
+  });
 }
 
 function updateStats(type) {

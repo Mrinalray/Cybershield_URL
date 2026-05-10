@@ -240,7 +240,7 @@ input[type="text"] {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
-  padding: 16px 16px 16px 46px;
+  padding: 16px 48px 16px 46px;
   font-size: 15px;
   color: #e2e8f0;
   outline: none;
@@ -253,6 +253,31 @@ input[type="text"]::placeholder { color: #475569; }
 input[type="text"]:focus {
   border-color: rgba(0,255,180,0.4);
   background: rgba(0,255,180,0.04);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 50, 50, 0.1);
+  color: #f87171;
+  border-color: rgba(255, 50, 50, 0.2);
 }
 
 .scan-btn {
