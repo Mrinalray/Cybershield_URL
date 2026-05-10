@@ -861,7 +861,21 @@ input[type="text"]:focus {
   .scan-btn {
     width: 100%;
     justify-content: center;
-    padding: 18px;
+    padding: 16px;
+    font-size: 16px;
+  }
+  .examples {
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .examples-label {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .example-chip {
+    padding: 6px 14px;
+    font-size: 13px;
   }
   .team-grid {
     grid-template-columns: 1fr;
