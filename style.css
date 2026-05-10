@@ -730,7 +730,7 @@ input[type="text"]:focus {
 
 .footer-content {
   display: grid;
-  grid-template-columns: 1.5fr 2fr 0.5fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   margin-bottom: 40px;
 }
@@ -777,13 +777,7 @@ input[type="text"]:focus {
   align-items: flex-start;
 }
 
-.theme-toggle-btn.secondary {
-  position: static;
-  width: 44px;
-  height: 44px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-}
+.theme-toggle-btn.secondary { display: none; }
 
 .footer-bottom {
   text-align: center;
