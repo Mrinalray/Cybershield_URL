@@ -802,11 +802,76 @@ input[type="text"]:focus {
 }
 
 /* ── Responsive ── */
+@media (max-width: 1024px) {
+  .wrapper { padding: 40px 24px; }
+  .footer-content { gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .footer-brand p {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .footer-col h4 {
+    margin-bottom: 16px;
+  }
+
+  .footer-actions {
+    justify-content: center;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 600px) {
-  .input-row  { flex-direction: column; }
-  .stats-row  { grid-template-columns: repeat(2, 1fr); }
-  .team-grid  { grid-template-columns: repeat(3, 1fr); }
-  .member-avatar { width: 70px; height: 70px; font-size: 18px; }
+  .header h1 { font-size: 32px; }
+  .scanner-card { padding: 24px; }
+  .input-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .scan-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 18px;
+  }
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+  .member-avatar {
+    width: 72px;
+    height: 72px;
+  }
+  .theme-toggle-btn {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media (max-width: 380px) {
