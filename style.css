@@ -570,11 +570,11 @@ input[type="text"]:focus {
 .feature-title {
   font-size: 14px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text-color);
   margin-bottom: 4px;
 }
 
-.feature-desc { font-size: 12px; color: #475569; line-height: 1.5; }
+.feature-desc { font-size: 12px; color: var(--subtitle-color); line-height: 1.5; }
 
 /* ════════════════════════════
    TEAM SECTION
@@ -582,7 +582,7 @@ input[type="text"]:focus {
 .team-section {
   margin-top: 72px;
   padding-top: 48px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--card-border);
 }
 
 .team-header {
