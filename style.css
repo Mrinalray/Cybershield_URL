@@ -19,15 +19,15 @@
   --text-color: #000000;
   --accent-1: #f97316;
   --accent-1-rgb: 249, 115, 22;
-  --accent-2: #ef4444;
+  --accent-2: #ea580c;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --subtitle-color: #1a1a1a;
-  --label-color: #333333;
-  --input-bg: #f1f5f9;
-  --input-border: #cbd5e1;
-  --header-badge-bg: rgba(249, 115, 22, 0.1);
-  --header-badge-border: rgba(249, 115, 22, 0.2);
+  --card-border: rgba(249, 115, 22, 0.15);
+  --subtitle-color: #000000;
+  --label-color: #111111;
+  --input-bg: #ffffff;
+  --input-border: rgba(249, 115, 22, 0.25);
+  --header-badge-bg: rgba(249, 115, 22, 0.08);
+  --header-badge-border: rgba(249, 115, 22, 0.25);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
