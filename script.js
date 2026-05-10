@@ -1,6 +1,6 @@
 //  LOADER
 
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {   // ← fix: was window.addEventListener('load')
   setTimeout(() => {
     const loader = document.getElementById('loader');
     const main   = document.getElementById('mainPage');
@@ -20,7 +20,7 @@ const team = [
   { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-   {name: "Disha Samanta",     img: "Disha.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg"    },
 ];
 
 (function buildTeam() {
@@ -97,6 +97,8 @@ function showResult(type, title, desc, url, threats) {
     </div>`;
 }
 
+var arr=[];
+
 async function checkSecurity() {
   const input = document.getElementById('urlInput').value.trim();
   if (!input) {
@@ -104,21 +106,46 @@ async function checkSecurity() {
     return;
   }
 
+
   let url = input;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     url = 'https://' + url;
+    url=url.toLowerCase();
   }
 
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
+  var i=arr.length;
+  var v=0;
+  for(v;v<i;v++){
+    if(arr[v]==url){
+      showResult('error', 'Already Scanned', 'Please type a different URL to scan above.', '', []);
+      btn.disabled = false;
+      return;
+    }
+  }
+  arr.push(url);
+
   try {
-    const response = await fetch('https://cybershield-sxz0.onrender.com/check', {
-      method: 'POST',
+const BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '')
+  ? 'http://localhost:3000'
+  : 'https://cybershield-sxz0.onrender.com';
+const response = await fetch(`${BASE_URL}/check`, {
+        method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
     });
+
+    // ← fix: handle rate limit response from backend
+    if (response.status === 429) {
+      const data = await response.json();
+      const wait = data.retryAfter ? ` Try again in ${data.retryAfter}s.` : '';
+      showResult('error', 'Slow Down!',
+        `You've hit the scan limit (10 per minute).${wait}`, '', []);
+      return;
+    }
 
     if (!response.ok) throw new Error('Server error ' + response.status);
     const data = await response.json();
