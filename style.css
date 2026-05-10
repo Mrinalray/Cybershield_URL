@@ -876,6 +876,9 @@ input[type="text"]:focus {
     width: 40px;
     height: 40px;
   }
+  .team-grid-wrap.open {
+    max-height: 2000px;
+  }
 }
 
 @media (max-width: 380px) {
