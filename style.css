@@ -189,9 +189,9 @@ body::before {
 .wrapper {
   position: relative;
   z-index: 1;
-  max-width: 780px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 24px 80px;
+  padding: 60px 40px 80px;
 }
 
 /* ── Theme Toggle ── */
@@ -305,7 +305,7 @@ h1 span {
 .subtitle {
   font-size: 16px;
   color: var(--subtitle-color);
-  max-width: 440px;
+  max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
 }
@@ -314,10 +314,13 @@ h1 span {
 .scanner-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 20px;
-  padding: 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  padding: 48px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .input-row {
