@@ -13,6 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {   // ← fix: was window.a
 });
 
 
+//  THEME TOGGLE
+
+(function initTheme() {
+  const theme = localStorage.getItem('theme') || 'dark';
+  if (theme === 'light') {
+    document.body.classList.add('light-mode');
+  }
+})();
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('themeToggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', toggleTheme);
+  }
+});
+
+
 //  TEAM — collapsible
 
 const team = [
