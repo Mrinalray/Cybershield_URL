@@ -93,8 +93,31 @@ function toggleTeam() {
 let totalScans = 0, safeCount = 0, dangerCount = 0;
 
 function fillExample(url) {
-  document.getElementById('urlInput').value = url;
-  document.getElementById('urlInput').focus();
+  const input = document.getElementById('urlInput');
+  input.value = url;
+  input.focus();
+  toggleClearBtn();
+}
+
+const urlInput = document.getElementById('urlInput');
+const clearBtn = document.getElementById('clearInput');
+
+function toggleClearBtn() {
+  if (clearBtn) {
+    clearBtn.style.display = urlInput.value ? 'flex' : 'none';
+  }
+}
+
+if (urlInput) {
+  urlInput.addEventListener('input', toggleClearBtn);
+}
+
+if (clearBtn) {
+  clearBtn.addEventListener('click', () => {
+    urlInput.value = '';
+    toggleClearBtn();
+    urlInput.focus();
+  });
 }
 
 function updateStats(type) {
@@ -149,6 +172,7 @@ async function checkSecurity() {
 
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
+  document.getElementById('urlInput').disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
   var i=arr.length;
@@ -203,6 +227,7 @@ const response = await fetch(`${BASE_URL}/check`, {
       '', []);
   } finally {
     btn.disabled = false;
+    document.getElementById('urlInput').disabled = false; 
   }
 }
 

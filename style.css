@@ -252,6 +252,64 @@ body::before {
   opacity: 0;
 }
 
+/* ── Theme Toggle ── */
+.theme-toggle-btn {
+  position: absolute;
+  top: 32px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.05);
+  border-color: var(--accent-1);
+  box-shadow: 0 0 15px rgba(0, 255, 180, 0.2);
+}
+
+.toggle-icon-wrap {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.sun-icon, .moon-icon {
+  position: absolute;
+  inset: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--accent-1);
+}
+
+.light-mode .sun-icon {
+  transform: translateY(30px) rotate(45deg);
+  opacity: 0;
+}
+
+.light-mode .moon-icon {
+  transform: translateY(0) rotate(0);
+  opacity: 1;
+}
+
+.sun-icon {
+  transform: translateY(0) rotate(0);
+  opacity: 1;
+}
+
+.moon-icon {
+  transform: translateY(-30px) rotate(-45deg);
+  opacity: 0;
+}
+
 /* ── Header ── */
 .header {
   text-align: center;
@@ -350,7 +408,7 @@ input[type="text"] {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   border-radius: 12px;
-  padding: 16px 16px 16px 46px;
+  padding: 16px 48px 16px 46px;
   font-size: 15px;
   color: var(--text-color);
   outline: none;
@@ -364,6 +422,31 @@ input[type="text"]:focus {
   border-color: var(--accent-1);
   background: var(--input-bg);
   box-shadow: 0 0 15px rgba(var(--accent-1-rgb), 0.1);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 50, 50, 0.1);
+  color: #f87171;
+  border-color: rgba(255, 50, 50, 0.2);
 }
 
 .scan-btn {

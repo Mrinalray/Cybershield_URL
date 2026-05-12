@@ -89,13 +89,22 @@ git clone https://github.com/mrinalray/Cybershield_URL.git
 cd Cybershield_URL
 ```
 
-3. Add your API key:
+3. Create a `.env` file for backend configuration:
 
-```js
-const API_KEY = "YOUR_API_KEY";
+```bash
+API_KEY=YOUR_API_KEY
+CORS_ORIGINS=https://cybershield-url.netlify.app,http://localhost:5500
+REQUEST_TIMEOUT_MS=5000
+REQUEST_RETRIES=2
 ```
 
-4. Run locally:
+4. Start backend:
+
+```bash
+node server.js
+```
+
+5. Run frontend:
 
 * Open `index.html` in browser
 
