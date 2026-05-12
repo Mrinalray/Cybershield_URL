@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — CyberShield</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .legal-container {
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+    }
+    h1 { color: var(--accent-1); margin-bottom: 24px; }
+    h2 { color: var(--text-color); margin-top: 32px; margin-bottom: 16px; }
+    p { color: var(--subtitle-color); line-height: 1.8; margin-bottom: 16px; }
+    .back-link { 
+      display: inline-block; 
+      margin-bottom: 24px; 
+      color: var(--accent-1); 
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="legal-container">
+      <a href="index.html" class="back-link">← Back to Scanner</a>
+      <h1>Terms of Service</h1>
+      <p>Last updated: May 11, 2026</p>
+      
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing or using CyberShield, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+      
+      <h2>2. Use License</h2>
+      <p>CyberShield is provided as a security tool for personal and educational use. You may not use the service to automate high-volume scans or attempt to bypass the API rate limits.</p>
+      
+      <h2>3. Disclaimer</h2>
+      <p>The security results are provided "as is" based on the Google Safe Browsing database. While highly accurate, CyberShield does not guarantee 100% detection of all threats. Always exercise caution when visiting unknown websites.</p>
+      
+      <h2>4. Limitation of Liability</h2>
+      <p>CyberShield and its developers shall not be liable for any damages arising out of the use or inability to use the scanner.</p>
+    </div>
+  </div>
+
+  <script>
+    (function initTheme() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') document.body.classList.add('light-mode');
+    })();
+  </script>
+</body>
+</html>

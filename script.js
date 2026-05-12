@@ -1,13 +1,21 @@
 //  LOADER
 
-document.addEventListener('DOMContentLoaded', () => {   // ← fix: was window.addEventListener('load')
+document.addEventListener('DOMContentLoaded', () => {
+  const loader = document.getElementById('loader');
+  const main   = document.getElementById('mainPage');
+
+  if (sessionStorage.getItem('loaderShown')) {
+    if (loader) loader.style.display = 'none';
+    if (main) main.classList.remove('hidden');
+    return;
+  }
+
   setTimeout(() => {
-    const loader = document.getElementById('loader');
-    const main   = document.getElementById('mainPage');
-    loader.classList.add('fade-out');
+    if (loader) loader.classList.add('fade-out');
     setTimeout(() => {
-      loader.style.display = 'none';
-      main.classList.remove('hidden');
+      if (loader) loader.style.display = 'none';
+      if (main) main.classList.remove('hidden');
+      sessionStorage.setItem('loaderShown', 'true');
     }, 500);
   }, 3200);
 });
@@ -38,11 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
 //  TEAM — collapsible
 
 const team = [
-  { name: "Mrinal Roy",    img: "Mrinal.jpg"   },
-  { name: "Rahul Sah",     img: "Rahul.jpg"    },
-  { name: "Swastika Shaw", img: "Swastika.jpg" },
-  { name: "Arpita Roy",    img: "Arpita.jpg"   },
-  { name: "Disha Samanta", img: "Disha.jpg"    },
+  { name: "Mrinal Roy",    img: "public/Mrinal.jpg"   },
+  { name: "Rahul Sah",     img: "public/Rahul.jpg"    },
+  { name: "Swastika Shaw", img: "public/Swastika.jpg" },
+  { name: "Arpita Roy",    img: "public/Arpita.jpg"   },
+  { name: "Disha Samanta", img: "public/Disha.jpg" },
 ];
 
 (function buildTeam() {
