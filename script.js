@@ -62,6 +62,41 @@ function toggleTeam() {
 
 let totalScans = 0, safeCount = 0, dangerCount = 0;
 
+function isValidUrl(urlString) {
+  try {
+    new URL(urlString);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function formatAndValidateUrl(input) {
+  if (!input || input.trim() === '') {
+    return { valid: false, error: 'Enter a URL', url: null };
+  }
+
+  let url = input.trim();
+
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url;
+  }
+
+  if (!isValidUrl(url)) {
+    return { valid: false, error: 'Invalid URL format. Please enter a valid website URL.', url: null };
+  }
+
+  try {
+    const urlObj = new URL(url);
+    if (!urlObj.hostname) {
+      return { valid: false, error: 'URL must include a domain name.', url: null };
+    }
+    return { valid: true, error: null, url: url };
+  } catch (e) {
+    return { valid: false, error: 'Invalid URL. Please check and try again.', url: null };
+  }
+}
+
 function fillExample(url) {
   document.getElementById('urlInput').value = url;
   document.getElementById('urlInput').focus();
@@ -98,17 +133,15 @@ function showResult(type, title, desc, url, threats) {
 }
 
 async function checkSecurity() {
-  const input = document.getElementById('urlInput').value.trim();
-  if (!input) {
-    showResult('error', 'Enter a URL', 'Please type a URL to scan above.', '', []);
+  const input = document.getElementById('urlInput').value;
+  const validation = formatAndValidateUrl(input);
+
+  if (!validation.valid) {
+    showResult('error', 'Invalid Input', validation.error, '', []);
     return;
   }
 
-  let url = input;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-  }
-
+  const url = validation.url;
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
