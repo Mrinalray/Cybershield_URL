@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CyberShield — URL Security Scanner</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Reliability icons created by FACH - https://www.flaticon.com/free-icons/reliability -->
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
 
@@ -13,11 +15,11 @@
     <div class="loader-inner">
       <div class="loader-ring"></div>
       <div class="loader-logo">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00ffb4" stroke-width="1.8">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent-1)" stroke-width="1.8">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
       </div>
-      <div class="loader-brand">CyberShield</div>
+     <div class="loader-brand">CyberShield</div>
       <div class="loader-tagline">Your Security, In Your Hands.</div>
       <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
     </div>
@@ -26,6 +28,18 @@
   <!-- ── Main Page ── -->
   <div id="mainPage" class="hidden">
     <div class="wrapper">
+      <!-- Theme Toggle -->
+      <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <div class="toggle-icon-wrap">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </div>
+      </button>
+
 
       <!-- Header -->
       <header class="header">
@@ -46,6 +60,11 @@
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
             </svg>
             <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false">
+            <button id="clearInput" class="clear-btn" aria-label="Clear input" style="display: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
           <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -63,11 +82,12 @@
           <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
         </div>
 
-        <div id="result"></div>
+<div id="result" aria-live="polite"></div>
+
       </div>
 
       <!-- Stats -->
-      <div class="stats-row">
+      <div class="stats-row" aria-live="polite">
         <div class="stat-card">
           <div class="stat-num" id="totalScans">0</div>
           <div class="stat-label">URLs Scanned</div>
@@ -85,17 +105,30 @@
       <!-- Features -->
       <div class="features">
         <div class="feature-item">
-          <div class="feature-icon">🛡️</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
           <div class="feature-title">Malware Detection</div>
           <div class="feature-desc">Identifies URLs hosting malicious software</div>
         </div>
         <div class="feature-item">
-          <div class="feature-icon">🎣</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <line x1="9" y1="10" x2="15" y2="10"/>
+            </svg>
+          </div>
           <div class="feature-title">Phishing Shield</div>
           <div class="feature-desc">Catches social engineering &amp; credential theft</div>
         </div>
         <div class="feature-item">
-          <div class="feature-icon">⚡</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
           <div class="feature-title">Real-time API</div>
           <div class="feature-desc">Live data from Google Safe Browsing database</div>
         </div>
@@ -122,7 +155,34 @@
         </div>
       </div>
 
-      <div class="footer">Built for Security &mdash; Powered by Google Safe Browsing API</div>
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="logo-badge">
+              <div class="dot"></div>
+              CyberShield
+            </div>
+            <p>Providing real-time URL security analysis to protect your digital footprint from evolving threats.</p>
+          </div>
+          
+          <div class="footer-links">
+            <div class="footer-col">
+              <h4>Legal</h4>
+              <a href="privacy.html">Privacy Policy</a>
+              <a href="terms.html">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+              <h4>Resources</h4>
+              <a href="docs.html">Documentation</a>
+              <a href="https://github.com/Mrinalray/Cybershield_URL" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          &copy; 2026 CyberShield URL Scanner. Built for Security &mdash; Powered by Google Safe Browsing API.
+        </div>
+      </footer>
 
     </div>
   </div>
