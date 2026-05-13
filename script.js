@@ -48,11 +48,13 @@ function toggleTeam() {
   if (teamOpen) {
     wrap.classList.add('open');
     toggle.classList.add('open');
-    toggle.setAttribute('aria-label', 'Hide team');
+    toggle.setAttribute('aria-label', 'Hide team members');
+    toggle.setAttribute('aria-expanded', 'true');
   } else {
     wrap.classList.remove('open');
     toggle.classList.remove('open');
-    toggle.setAttribute('aria-label', 'Show team');
+    toggle.setAttribute('aria-label', 'Show team members');
+    toggle.setAttribute('aria-expanded', 'false');
   }
 }
 
@@ -63,9 +65,23 @@ function toggleTeam() {
 let totalScans = 0, safeCount = 0, dangerCount = 0;
 
 function fillExample(url) {
-  document.getElementById('urlInput').value = url;
-  document.getElementById('urlInput').focus();
+  const input = document.getElementById('urlInput');
+  input.value = url;
+  input.focus();
 }
+
+// Enable Enter key on example chips
+document.addEventListener('DOMContentLoaded', () => {
+  const chips = document.querySelectorAll('.example-chip');
+  chips.forEach(chip => {
+    chip.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        chip.click();
+      }
+    });
+  });
+});
 
 function updateStats(type) {
   totalScans++;

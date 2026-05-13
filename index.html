@@ -45,9 +45,10 @@
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
             </svg>
-            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false">
+            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false" aria-label="Enter website URL to scan" aria-describedby="urlHint">
+            <small id="urlHint" class="sr-only">Enter a URL starting with http:// or https:// to scan for security threats</small>
           </div>
-          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
+          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()" aria-label="Scan the entered URL for security threats">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
@@ -55,15 +56,15 @@
           </button>
         </div>
 
-        <div class="examples">
-          <span class="examples-label">Try:</span>
-          <span class="example-chip" onclick="fillExample('https://google.com')">google.com</span>
-          <span class="example-chip" onclick="fillExample('https://github.com')">github.com</span>
-          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')">phishing test</span>
-          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
+        <div class="examples" role="group" aria-label="Quick example URLs">
+          <span class="examples-label" id="examplesLabel">Try:</span>
+          <button class="example-chip" onclick="fillExample('https://google.com')" tabindex="0" aria-label="Scan google.com">google.com</button>
+          <button class="example-chip" onclick="fillExample('https://github.com')" tabindex="0" aria-label="Scan github.com">github.com</button>
+          <button class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')" tabindex="0" aria-label="Scan phishing test URL">phishing test</button>
+          <button class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')" tabindex="0" aria-label="Scan malware test URL">malware test</button>
         </div>
 
-        <div id="result"></div>
+        <div id="result" aria-live="polite" aria-atomic="true" role="status"></div>
       </div>
 
       <!-- Stats -->
@@ -110,7 +111,7 @@
         </div>
 
         <!-- Toggle arrow button -->
-        <button class="team-toggle" id="teamToggle" onclick="toggleTeam()" aria-label="Show team">
+        <button class="team-toggle" id="teamToggle" onclick="toggleTeam()" aria-label="Show team members" aria-expanded="false" aria-controls="teamGridWrap">
           <svg id="toggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
