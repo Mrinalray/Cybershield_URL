@@ -40,6 +40,19 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 body {
   background: var(--bg-color);
   color: var(--text-color);
@@ -491,6 +504,8 @@ input[type="text"]:focus {
   cursor: pointer;
   transition: all 0.15s;
   font-family: 'Courier New', monospace;
+  background: none;
+  font-weight: inherit;
 }
 
 .example-chip:hover {
@@ -498,6 +513,13 @@ input[type="text"]:focus {
   border-color: var(--accent-1);
   color: var(--accent-1);
   transform: translateY(-1px);
+}
+
+.example-chip:focus {
+  outline: 2px solid rgba(0,255,180,0.6);
+  outline-offset: 2px;
+  background: rgba(0,255,180,0.08);
+  color: #00ffb4;
 }
 
 /* ── Result ── */
