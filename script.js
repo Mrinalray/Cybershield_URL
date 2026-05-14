@@ -48,11 +48,13 @@ function toggleTeam() {
   if (teamOpen) {
     wrap.classList.add('open');
     toggle.classList.add('open');
-    toggle.setAttribute('aria-label', 'Hide team');
+    toggle.setAttribute('aria-label', 'Hide team members');
+    toggle.setAttribute('aria-expanded', 'true');
   } else {
     wrap.classList.remove('open');
     toggle.classList.remove('open');
-    toggle.setAttribute('aria-label', 'Show team');
+    toggle.setAttribute('aria-label', 'Show team members');
+    toggle.setAttribute('aria-expanded', 'false');
   }
 }
 

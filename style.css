@@ -40,6 +40,19 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 body {
   background: var(--bg-color);
   color: var(--text-color);
@@ -470,6 +483,65 @@ input[type="text"]:focus {
 .scan-btn:active { transform: translateY(0); }
 .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+.dashboard-cta {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.dashboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card h2 {
+  margin-bottom: 16px;
+}
+
+.dashboard-card ul {
+  padding-left: 20px;
+  color: var(--subtitle-color);
+  line-height: 1.8;
+}
+
+.chart-card {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 24px;
+  padding: 28px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.chart-placeholder {
+  width: 100%;
+  min-height: 140px;
+  border: 1px dashed var(--accent-1);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--subtitle-color);
+  font-size: 14px;
+}
+
+.dashboard-note {
+  grid-column: span 2;
+}
+
 /* ── Example chips ── */
 .examples {
   margin-top: 16px;
@@ -491,6 +563,8 @@ input[type="text"]:focus {
   cursor: pointer;
   transition: all 0.15s;
   font-family: 'Courier New', monospace;
+  background: none;
+  font-weight: inherit;
 }
 
 .example-chip:hover {
@@ -498,6 +572,13 @@ input[type="text"]:focus {
   border-color: var(--accent-1);
   color: var(--accent-1);
   transform: translateY(-1px);
+}
+
+.example-chip:focus {
+  outline: 2px solid rgba(0,255,180,0.6);
+  outline-offset: 2px;
+  background: rgba(0,255,180,0.08);
+  color: #00ffb4;
 }
 
 /* ── Result ── */
