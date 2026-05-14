@@ -122,8 +122,30 @@ node server.js
 
 * 🔐 Email breach checker integration (HIBP API)
 * 📊 Threat analytics dashboard
+  - View past scan results
+  - Track phishing and malware detection trends
+  - Visualize data with charts and logs
+  - Export logs for offline analysis
 * 🌍 Browser extension support
 * 🤖 AI-based threat detection
+
+---
+
+## 📈 Threat Analytics Dashboard (Proposed)
+
+CyberShield will be extended with a dedicated analytics dashboard for monitoring historical URL scans and threat patterns.
+This feature will allow users to:
+* View past scan results and outcomes
+* Track the frequency of phishing and malware detections
+* Visualize trends using charts such as bar and line graphs
+* Export scan logs for further analysis
+
+Proposed implementation strategy:
+* Create `dashboard.html` as a new dashboard page
+* Use `Chart.js` or `D3.js` for interactive visualizations
+* Store scan results in local storage for the demo
+* Prepare backend database support for future persistence
+* Add a navigation link from the main page to the dashboard
 
 ---
 
