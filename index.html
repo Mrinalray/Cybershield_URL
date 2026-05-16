@@ -52,7 +52,8 @@
             <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false" aria-label="Enter website URL to scan" aria-describedby="urlHint">
             <small id="urlHint" class="sr-only">Enter a URL starting with http:// or https:// to scan for security threats</small>
           </div>
-          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()" aria-label="Scan the entered URL for security threats">
+          <p id="urlError" style="display:none;"></p>
+          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>

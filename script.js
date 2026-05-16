@@ -143,7 +143,33 @@ async function checkSecurity() {
     return;
   }
 
-  const url = validation.url;
+  function isValidURL(str) {
+  try {
+    const parsed = new URL(str);
+    const hostname = parsed.hostname;
+    // must have http/https AND a hostname with at least one dot (e.g. google.com)
+    return (parsed.protocol === 'http:' || parsed.protocol === 'https:') &&
+           hostname.includes('.') &&
+           hostname.length > 3;
+  } catch (e) {
+    return false;
+  }
+}
+
+const urlInput = document.getElementById('urlInput');
+const urlError = document.getElementById('urlError');
+
+if (!isValidURL(url)) {
+  urlInput.classList.add('input-error');
+  urlError.textContent  = '⚠ Please enter a valid URL (e.g. https://example.com)';
+  urlError.style.display = 'block';
+  btn.disabled = false;
+  return;                       
+}
+
+urlInput.classList.remove('input-error');
+urlError.style.display = 'none';
+
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
@@ -182,4 +208,9 @@ async function checkSecurity() {
 
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkSecurity();
+});
+
+document.getElementById('urlInput').addEventListener('input', () => {
+  document.getElementById('urlInput').classList.remove('input-error');
+  document.getElementById('urlError').style.display = 'none';
 });
