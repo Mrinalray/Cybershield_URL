@@ -89,13 +89,22 @@ git clone https://github.com/mrinalray/Cybershield_URL.git
 cd Cybershield_URL
 ```
 
-3. Add your API key:
+3. Create a `.env` file for backend configuration:
 
-```js
-const API_KEY = "YOUR_API_KEY";
+```bash
+API_KEY=YOUR_API_KEY
+CORS_ORIGINS=https://cybershield-url.netlify.app,http://localhost:5500
+REQUEST_TIMEOUT_MS=5000
+REQUEST_RETRIES=2
 ```
 
-4. Run locally:
+4. Start backend:
+
+```bash
+node server.js
+```
+
+5. Run frontend:
 
 * Open `index.html` in browser
 
@@ -113,8 +122,30 @@ const API_KEY = "YOUR_API_KEY";
 
 * 🔐 Email breach checker integration (HIBP API)
 * 📊 Threat analytics dashboard
+  - View past scan results
+  - Track phishing and malware detection trends
+  - Visualize data with charts and logs
+  - Export logs for offline analysis
 * 🌍 Browser extension support
 * 🤖 AI-based threat detection
+
+---
+
+## 📈 Threat Analytics Dashboard (Proposed)
+
+CyberShield will be extended with a dedicated analytics dashboard for monitoring historical URL scans and threat patterns.
+This feature will allow users to:
+* View past scan results and outcomes
+* Track the frequency of phishing and malware detections
+* Visualize trends using charts such as bar and line graphs
+* Export scan logs for further analysis
+
+Proposed implementation strategy:
+* Create `dashboard.html` as a new dashboard page
+* Use `Chart.js` or `D3.js` for interactive visualizations
+* Store scan results in local storage for the demo
+* Prepare backend database support for future persistence
+* Add a navigation link from the main page to the dashboard
 
 ---
 

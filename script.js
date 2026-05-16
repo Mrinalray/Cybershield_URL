@@ -1,6 +1,6 @@
 //  LOADER
 
-document.addEventListener('DOMContentLoaded', () => {   // ← fix: was window.addEventListener('load')
+window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
     const main   = document.getElementById('mainPage');
@@ -20,7 +20,7 @@ const team = [
   { name: "Rahul Sah",     img: "Rahul.jpg"    },
   { name: "Swastika Shaw", img: "Swastika.jpg" },
   { name: "Arpita Roy",    img: "Arpita.jpg"   },
-  { name: "Disha Samanta", img: "Disha.jpg"    },
+   {name: "Disha Samanta",     img: "Disha.jpg" },
 ];
 
 (function buildTeam() {
@@ -48,11 +48,13 @@ function toggleTeam() {
   if (teamOpen) {
     wrap.classList.add('open');
     toggle.classList.add('open');
-    toggle.setAttribute('aria-label', 'Hide team');
+    toggle.setAttribute('aria-label', 'Hide team members');
+    toggle.setAttribute('aria-expanded', 'true');
   } else {
     wrap.classList.remove('open');
     toggle.classList.remove('open');
-    toggle.setAttribute('aria-label', 'Show team');
+    toggle.setAttribute('aria-label', 'Show team members');
+    toggle.setAttribute('aria-expanded', 'false');
   }
 }
 
@@ -61,6 +63,41 @@ function toggleTeam() {
 //  SCANNER
 
 let totalScans = 0, safeCount = 0, dangerCount = 0;
+
+function isValidUrl(urlString) {
+  try {
+    new URL(urlString);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function formatAndValidateUrl(input) {
+  if (!input || input.trim() === '') {
+    return { valid: false, error: 'Enter a URL', url: null };
+  }
+
+  let url = input.trim();
+
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url;
+  }
+
+  if (!isValidUrl(url)) {
+    return { valid: false, error: 'Invalid URL format. Please enter a valid website URL.', url: null };
+  }
+
+  try {
+    const urlObj = new URL(url);
+    if (!urlObj.hostname) {
+      return { valid: false, error: 'URL must include a domain name.', url: null };
+    }
+    return { valid: true, error: null, url: url };
+  } catch (e) {
+    return { valid: false, error: 'Invalid URL. Please check and try again.', url: null };
+  }
+}
 
 function fillExample(url) {
   document.getElementById('urlInput').value = url;
@@ -97,20 +134,13 @@ function showResult(type, title, desc, url, threats) {
     </div>`;
 }
 
-var arr=[];
-
 async function checkSecurity() {
-  const input = document.getElementById('urlInput').value.trim();
-  if (!input) {
-    showResult('error', 'Enter a URL', 'Please type a URL to scan above.', '', []);
+  const input = document.getElementById('urlInput').value;
+  const validation = formatAndValidateUrl(input);
+
+  if (!validation.valid) {
+    showResult('error', 'Invalid Input', validation.error, '', []);
     return;
-  }
-
-
-  let url = input;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-    url=url.toLowerCase();
   }
 
   function isValidURL(str) {
@@ -144,35 +174,12 @@ urlError.style.display = 'none';
   btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
-  var i=arr.length;
-  var v=0;
-  for(v;v<i;v++){
-    if(arr[v]==url){
-      showResult('error', 'Already Scanned', 'Please type a different URL to scan above.', '', []);
-      btn.disabled = false;
-      return;
-    }
-  }
-  arr.push(url);
-
   try {
-const BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '')
-  ? 'http://localhost:3000'
-  : 'https://cybershield-sxz0.onrender.com';
-const response = await fetch(`${BASE_URL}/check`, {
-        method: 'POST',
+    const response = await fetch('https://cybershield-sxz0.onrender.com/check', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
     });
-
-    // ← fix: handle rate limit response from backend
-    if (response.status === 429) {
-      const data = await response.json();
-      const wait = data.retryAfter ? ` Try again in ${data.retryAfter}s.` : '';
-      showResult('error', 'Slow Down!',
-        `You've hit the scan limit (10 per minute).${wait}`, '', []);
-      return;
-    }
 
     if (!response.ok) throw new Error('Server error ' + response.status);
     const data = await response.json();
