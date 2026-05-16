@@ -12,155 +12,380 @@
   <div id="loader">
     <div class="loader-inner">
       <div class="loader-ring"></div>
+
       <div class="loader-logo">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00ffb4" stroke-width="1.8">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
       </div>
+
       <div class="loader-brand">CyberShield</div>
       <div class="loader-tagline">Your Security, In Your Hands.</div>
-      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+
+      <div class="loader-bar-wrap">
+        <div class="loader-bar"></div>
+      </div>
     </div>
   </div>
 
   <!-- ── Main Page ── -->
   <div id="mainPage" class="hidden">
+
     <div class="wrapper">
 
       <!-- Header -->
       <header class="header">
+
         <div class="logo-badge">
           <div class="dot"></div>
           CyberShield
         </div>
-        <h1>Is This URL<br><span>Safe to Visit?</span></h1>
-        <p class="subtitle">Real-time threat detection powered by Google Safe Browsing API. Scans for phishing, malware &amp; social engineering.</p>
+
+        <h1>
+          Is This URL<br>
+          <span>Safe to Visit?</span>
+        </h1>
+
+        <p class="subtitle">
+          Real-time threat detection powered by Google Safe Browsing API.
+          Scans for phishing, malware & social engineering.
+        </p>
+
       </header>
 
+      <!-- Dashboard Button -->
       <div class="dashboard-cta">
-        <a class="scan-btn" href="dashboard.html">View Threat Analytics Dashboard</a>
+        <a class="scan-btn" href="dashboard.html">
+          View Threat Analytics Dashboard
+        </a>
       </div>
 
-      <!-- Scanner -->
+      <!-- Scanner Card -->
       <div class="scanner-card">
+
+        <!-- Input Row -->
         <div class="input-row">
+
           <div class="input-wrap">
-            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <svg
+              class="input-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
             </svg>
-            <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false" aria-label="Enter website URL to scan" aria-describedby="urlHint">
-            <small id="urlHint" class="sr-only">Enter a URL starting with http:// or https:// to scan for security threats</small>
+
+            <input
+              type="text"
+              id="urlInput"
+              placeholder="https://example.com"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Enter website URL to scan"
+              aria-describedby="urlHint"
+            >
+
+            <small id="urlHint" class="sr-only">
+              Enter a URL starting with http:// or https://
+              to scan for security threats
+            </small>
+
           </div>
-          <p id="urlError" style="display:none;"></p>
-          <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+
+          <button
+            class="scan-btn"
+            id="scanBtn"
+            onclick="checkSecurity()"
+            aria-label="Scan the entered URL for security threats"
+          >
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
             </svg>
+
             Scan URL
+
           </button>
+
         </div>
 
-        <div class="examples" role="group" aria-label="Quick example URLs">
-          <span class="examples-label" id="examplesLabel">Try:</span>
-          <button class="example-chip" onclick="fillExample('https://google.com')" tabindex="0" aria-label="Scan google.com">google.com</button>
-          <button class="example-chip" onclick="fillExample('https://github.com')" tabindex="0" aria-label="Scan github.com">github.com</button>
-          <button class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')" tabindex="0" aria-label="Scan phishing test URL">phishing test</button>
-          <button class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')" tabindex="0" aria-label="Scan malware test URL">malware test</button>
+        <!-- Example URLs -->
+        <div
+          class="examples"
+          role="group"
+          aria-label="Quick example URLs"
+        >
+
+          <span class="examples-label" id="examplesLabel">
+            Try:
+          </span>
+
+          <button
+            class="example-chip"
+            onclick="fillExample('https://google.com')"
+            tabindex="0"
+          >
+            google.com
+          </button>
+
+          <button
+            class="example-chip"
+            onclick="fillExample('https://github.com')"
+            tabindex="0"
+          >
+            github.com
+          </button>
+
+          <button
+            class="example-chip"
+            onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')"
+            tabindex="0"
+          >
+            phishing test
+          </button>
+
+          <button
+            class="example-chip"
+            onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')"
+            tabindex="0"
+          >
+            malware test
+          </button>
+
         </div>
 
-        <div id="result" aria-live="polite" aria-atomic="true" role="status"></div>
+        <!-- Result -->
+        <div
+          id="result"
+          aria-live="polite"
+          aria-atomic="true"
+          role="status"
+        ></div>
+
+        <!-- =========================
+     Risk Analysis Section
+========================== -->
+
+<div id="riskAnalysis" class="risk-analysis hidden">
+
+  <h3>Threat Risk Analysis</h3>
+
+  <!-- Risk Score -->
+  <div
+    class="risk-score-text"
+    id="riskScoreText"
+  >
+    Risk Score: 0%
+  </div>
+
+  <!-- Risk Meter -->
+  <div class="meter-bar">
+    <div
+      id="riskFill"
+      class="meter-fill"
+    ></div>
+  </div>
+
+  <!-- Confidence -->
+  <div
+    class="confidence-text"
+    id="confidenceText"
+  >
+    Confidence Level: 0%
+  </div>
+
+  <!-- Confidence Meter -->
+  <div class="meter-bar">
+    <div
+      id="confidenceFill"
+      class="meter-fill safe"
+    ></div>
+  </div>
+
+  <!-- Risk Label -->
+  <div
+    class="risk-label"
+    id="riskLabel"
+  >
+    SAFE
+  </div>
+
+</div>
+
       </div>
+
 
       <!-- Stats -->
       <div class="stats-row">
+
         <div class="stat-card">
           <div class="stat-num" id="totalScans">0</div>
           <div class="stat-label">URLs Scanned</div>
         </div>
+
         <div class="stat-card">
           <div class="stat-num" id="safeCount">0</div>
           <div class="stat-label">Safe</div>
         </div>
+
         <div class="stat-card">
           <div class="stat-num" id="dangerCount">0</div>
           <div class="stat-label">Threats Blocked</div>
         </div>
+
       </div>
 
       <!-- Features -->
       <div class="features">
+
         <div class="feature-item">
           <div class="feature-icon">🛡️</div>
           <div class="feature-title">Malware Detection</div>
-          <div class="feature-desc">Identifies URLs hosting malicious software</div>
+          <div class="feature-desc">
+            Identifies URLs hosting malicious software
+          </div>
         </div>
+
         <div class="feature-item">
           <div class="feature-icon">🎣</div>
           <div class="feature-title">Phishing Shield</div>
-          <div class="feature-desc">Catches social engineering &amp; credential theft</div>
+          <div class="feature-desc">
+            Catches social engineering & credential theft
+          </div>
         </div>
+
         <div class="feature-item">
           <div class="feature-icon">⚡</div>
           <div class="feature-title">Real-time API</div>
-          <div class="feature-desc">Live data from Google Safe Browsing database</div>
+          <div class="feature-desc">
+            Live data from Google Safe Browsing database
+          </div>
         </div>
+
       </div>
 
       <!-- Team Section -->
       <div class="team-section">
+
         <div class="team-header">
+
           <div class="section-tag">The Team</div>
-          <h2 class="team-title">Meet the builders</h2>
-          <p class="team-sub">The people who made CyberShield possible</p>
+
+          <h2 class="team-title">
+            Meet the builders
+          </h2>
+
+          <p class="team-sub">
+            The people who made CyberShield possible
+          </p>
+
         </div>
 
-        <!-- Toggle arrow button -->
-        <button class="team-toggle" id="teamToggle" onclick="toggleTeam()" aria-label="Show team members" aria-expanded="false" aria-controls="teamGridWrap">
-          <svg id="toggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <!-- Toggle Button -->
+        <button
+          class="team-toggle"
+          id="teamToggle"
+          onclick="toggleTeam()"
+          aria-label="Show team members"
+          aria-expanded="false"
+          aria-controls="teamGridWrap"
+        >
+
+          <svg
+            id="toggleIcon"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+          >
             <polyline points="6 9 12 15 18 9"/>
           </svg>
+
         </button>
 
-        <!-- Collapsible grid -->
+        <!-- Team Grid -->
         <div class="team-grid-wrap" id="teamGridWrap">
           <div class="team-grid" id="teamGrid"></div>
         </div>
+
       </div>
 
-      <!-- Main Footer -->
+      <!-- Footer -->
       <footer class="main-footer">
+
         <div class="footer-content">
+
           <div class="footer-brand">
+
             <div class="logo-badge">
               <div class="dot"></div>
               CyberShield
             </div>
-            <p>Providing real-time URL security analysis to protect your digital footprint from evolving threats.</p>
+
+            <p>
+              Providing real-time URL security analysis to protect
+              your digital footprint from evolving threats.
+            </p>
+
           </div>
-          
+
           <div class="footer-links">
+
             <div class="footer-col">
               <h4>Legal</h4>
               <a href="privacy.html">Privacy Policy</a>
               <a href="terms.html">Terms of Service</a>
             </div>
+
             <div class="footer-col">
               <h4>Resources</h4>
+
               <a href="docs.html">Documentation</a>
-              <a href="dashboard.html">Threat Analytics Dashboard</a>
-              <a href="https://github.com/Mrinalray/Cybershield_URL" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+
+              <a href="dashboard.html">
+                Threat Analytics Dashboard
+              </a>
+
+              <a
+                href="https://github.com/Mrinalray/Cybershield_URL"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub Repo
+              </a>
+
             </div>
+
           </div>
+
         </div>
+
         <div class="footer-bottom">
-          &copy; 2026 CyberShield URL Scanner. Built for Security &mdash; Powered by Google Safe Browsing API.
+          &copy; 2026 CyberShield URL Scanner.
+          Built for Security — Powered by Google Safe Browsing API.
         </div>
+
       </footer>
 
     </div>
+
   </div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
