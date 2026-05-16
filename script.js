@@ -1,132 +1,214 @@
-//  LOADER
+// ─────────────────────────────
+// LOADER
+// ─────────────────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
-  const loader = document.getElementById('loader');
-  const main   = document.getElementById('mainPage');
-
-  if (sessionStorage.getItem('loaderShown')) {
-    if (loader) loader.style.display = 'none';
-    if (main) main.classList.remove('hidden');
-    return;
-  }
+window.addEventListener('load', () => {
 
   setTimeout(() => {
-    if (loader) loader.classList.add('fade-out');
+
+    const loader = document.getElementById('loader');
+    const main = document.getElementById('mainPage');
+
+    loader.classList.add('fade-out');
+
     setTimeout(() => {
-      if (loader) loader.style.display = 'none';
-      if (main) main.classList.remove('hidden');
-      sessionStorage.setItem('loaderShown', 'true');
+      loader.style.display = 'none';
+      main.classList.remove('hidden');
     }, 500);
+
   }, 3200);
+
 });
 
-
-//  THEME TOGGLE
-
-(function initTheme() {
-  const theme = localStorage.getItem('theme') || 'dark';
-  if (theme === 'light') {
-    document.body.classList.add('light-mode');
-  }
-})();
-
-function toggleTheme() {
-  const isLight = document.body.classList.toggle('light-mode');
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const toggleBtn = document.getElementById('themeToggle');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', toggleTheme);
-  }
-});
-
-
-//  TEAM — collapsible
+// ─────────────────────────────
+// TEAM — collapsible
+// ─────────────────────────────
 
 const team = [
-  { name: "Mrinal Roy",    img: "public/Mrinal.jpg"   },
-  { name: "Rahul Sah",     img: "public/Rahul.jpg"    },
-  { name: "Swastika Shaw", img: "public/Swastika.jpg" },
-  { name: "Arpita Roy",    img: "public/Arpita.jpg"   },
-  { name: "Disha Samanta", img: "public/Disha.jpg" },
+  { name: "Mrinal Roy", img: "Mrinal.jpg" },
+  { name: "Rahul Sah", img: "Rahul.jpg" },
+  { name: "Swastika Shaw", img: "Swastika.jpg" },
+  { name: "Arpita Roy", img: "Arpita.jpg" },
+  { name: "Disha Samanta", img: "Disha.jpg" },
 ];
 
 (function buildTeam() {
+
   const grid = document.getElementById('teamGrid');
+
   grid.innerHTML = team.map(m => {
-    const initials = m.name.split(' ').map(w => w[0]).join('');
+
+    const initials = m.name
+      .split(' ')
+      .map(w => w[0])
+      .join('');
+
     return `
       <div class="member-card">
-        <div class="member-avatar">
-          <img src="${m.img}" alt="${m.name}"
-            onerror="this.parentElement.innerHTML='${initials}'">
-        </div>
-        <div class="member-name">${m.name}</div>
-      </div>`;
-  }).join('');
-})();
 
+        <div class="member-avatar">
+
+          <img
+            src="${m.img}"
+            alt="${m.name}"
+            onerror="this.parentElement.innerHTML='${initials}'"
+          >
+
+        </div>
+
+        <div class="member-name">
+          ${m.name}
+        </div>
+
+      </div>
+    `;
+
+  }).join('');
+
+})();
 
 let teamOpen = false;
 
 function toggleTeam() {
+
   teamOpen = !teamOpen;
-  const wrap   = document.getElementById('teamGridWrap');
+
+  const wrap = document.getElementById('teamGridWrap');
   const toggle = document.getElementById('teamToggle');
+
   if (teamOpen) {
+
     wrap.classList.add('open');
     toggle.classList.add('open');
-    toggle.setAttribute('aria-label', 'Hide team');
+
+    toggle.setAttribute('aria-label', 'Hide team members');
+    toggle.setAttribute('aria-expanded', 'true');
+
   } else {
+
     wrap.classList.remove('open');
     toggle.classList.remove('open');
-    toggle.setAttribute('aria-label', 'Show team');
+
+    toggle.setAttribute('aria-label', 'Show team members');
+    toggle.setAttribute('aria-expanded', 'false');
   }
 }
 
+// ─────────────────────────────
+// SCANNER
+// ─────────────────────────────
 
+let totalScans = 0;
+let safeCount = 0;
+let dangerCount = 0;
 
-//  SCANNER
+// Validate URL
 
-let totalScans = 0, safeCount = 0, dangerCount = 0;
+function isValidUrl(urlString) {
+
+  try {
+    new URL(urlString);
+    return true;
+  } catch (e) {
+    return false;
+  }
+
+}
+
+// Format & Validate URL
+
+function formatAndValidateUrl(input) {
+
+  if (!input || input.trim() === '') {
+
+    return {
+      valid: false,
+      error: 'Enter a URL',
+      url: null
+    };
+
+  }
+
+  let url = input.trim();
+
+  // Auto add HTTPS
+
+  if (
+    !url.startsWith('http://') &&
+    !url.startsWith('https://')
+  ) {
+    url = 'https://' + url;
+  }
+
+  if (!isValidUrl(url)) {
+
+    return {
+      valid: false,
+      error: 'Invalid URL format. Please enter a valid website URL.',
+      url: null
+    };
+
+  }
+
+  try {
+
+    const urlObj = new URL(url);
+
+    if (!urlObj.hostname) {
+
+      return {
+        valid: false,
+        error: 'URL must include a domain name.',
+        url: null
+      };
+
+    }
+
+    return {
+      valid: true,
+      error: null,
+      url: url
+    };
+
+  } catch (e) {
+
+    return {
+      valid: false,
+      error: 'Invalid URL. Please check and try again.',
+      url: null
+    };
+
+  }
+
+}
+
+// Fill Example URL
 
 function fillExample(url) {
-  const input = document.getElementById('urlInput');
-  input.value = url;
-  input.focus();
-  toggleClearBtn();
+
+  document.getElementById('urlInput').value = url;
+  document.getElementById('urlInput').focus();
+
 }
 
-const urlInput = document.getElementById('urlInput');
-const clearBtn = document.getElementById('clearInput');
-
-function toggleClearBtn() {
-  if (clearBtn) {
-    clearBtn.style.display = urlInput.value ? 'flex' : 'none';
-  }
-}
-
-if (urlInput) {
-  urlInput.addEventListener('input', toggleClearBtn);
-}
-
-if (clearBtn) {
-  clearBtn.addEventListener('click', () => {
-    urlInput.value = '';
-    toggleClearBtn();
-    urlInput.focus();
-  });
-}
+// Update Stats
 
 function updateStats(type) {
+
   totalScans++;
-  if (type === 'safe')   safeCount++;
-  if (type === 'danger') dangerCount++;
-  document.getElementById('totalScans').textContent  = totalScans;
-  document.getElementById('safeCount').textContent   = safeCount;
+
+  if (type === 'safe') {
+    safeCount++;
+  }
+
+  if (type === 'danger') {
+    dangerCount++;
+  }
+
+  document.getElementById('totalScans').textContent = totalScans;
+  document.getElementById('safeCount').textContent = safeCount;
   document.getElementById('dangerCount').textContent = dangerCount;
+
 }
 
 function calculateRiskScore(url, isThreat) {
@@ -195,11 +277,12 @@ function calculateRiskScore(url, isThreat) {
 }
 
 function showResult(type, title, desc, url, threats) {
+
   const icons = {
-    safe: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
-    danger: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-    error: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
-    loading: '<div class="spinner"></div>'
+    safe: '✓',
+    danger: '✕',
+    loading: '',
+    error: '!'
   };
 
   const isThreat = type === 'danger';
@@ -247,10 +330,19 @@ function showResult(type, title, desc, url, threats) {
   }
 
   document.getElementById('result').innerHTML = `
+
     <div class="result-card ${type}">
+
       <div class="result-icon">
-        ${icons[type]}
+
+        ${
+          type === 'loading'
+            ? '<div class="spinner"></div>'
+            : `<span>${icons[type]}</span>`
+        }
+
       </div>
+
       <div class="result-body">
         <div class="result-title">${title}</div>
         <div class="result-desc">${desc}</div>
@@ -307,37 +399,49 @@ function showResult(type, title, desc, url, threats) {
   }
 }
 
-var arr=[];
+// ─────────────────────────────
+// MAIN SECURITY CHECK
+// ─────────────────────────────
 
 async function checkSecurity() {
-  const input = document.getElementById('urlInput').value.trim();
-  if (!input) {
-    showResult('error', 'Enter a URL', 'Please type a URL to scan above.', '', []);
+
+  const input =
+    document.getElementById('urlInput').value;
+
+  const validation =
+    formatAndValidateUrl(input);
+
+  // Validation failed
+
+  if (!validation.valid) {
+
+    showResult(
+      'error',
+      'Invalid Input',
+      validation.error,
+      '',
+      []
+    );
+
     return;
   }
 
+  const url = validation.url;
 
-  let url = input;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-    url=url.toLowerCase();
-  }
+  const btn =
+    document.getElementById('scanBtn');
 
-  const btn = document.getElementById('scanBtn');
   btn.disabled = true;
-  document.getElementById('urlInput').disabled = true;
-  showResult('loading', 'Scanning...', 'Checking against threat databases. Please wait.', url, []);
 
-  var i=arr.length;
-  var v=0;
-  for(v;v<i;v++){
-    if(arr[v]==url){
-      showResult('error', 'Already Scanned', 'Please type a different URL to scan above.', '', []);
-      btn.disabled = false;
-      return;
-    }
-  }
-  arr.push(url);
+  // Loading State
+
+  showResult(
+    'loading',
+    'Scanning...',
+    'Checking against threat databases. Please wait.',
+    url,
+    []
+  );
 
   try {
     // Simulate network delay for UI effect
@@ -374,10 +478,22 @@ async function checkSecurity() {
       '', []);
   } finally {
     btn.disabled = false;
-    document.getElementById('urlInput').disabled = false; 
+
   }
+
 }
 
-document.getElementById('urlInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkSecurity();
-});
+// ─────────────────────────────
+// ENTER KEY SUPPORT
+// ─────────────────────────────
+
+document
+  .getElementById('urlInput')
+  .addEventListener('keydown', e => {
+
+    if (e.key === 'Enter') {
+      checkSecurity();
+    }
+
+  });
+  
