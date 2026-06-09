@@ -72,9 +72,7 @@ test("returns safe response when no threat matches exist", async () => {
 
   const result = await runRequest(app, { url: "https://example.com" }, "http://localhost:3000");
   assert.equal(result.status, 200);
-  assert.ok(result.body.typosquatting);
-  assert.equal(result.body.typosquatting.original.threat, "safe");
-  assert.ok(result.body.typosquatting.variants.length > 0);
+  assert.deepEqual(result.body, {});
 });
 
 test("returns threat response when matches are found", async () => {
@@ -94,8 +92,7 @@ test("returns threat response when matches are found", async () => {
 
   const result = await runRequest(app, { url: "https://bad.example.com" }, "http://localhost:3000");
   assert.equal(result.status, 200);
-  assert.deepEqual(result.body.matches, mockThreatResponse.matches);
-  assert.equal(result.body.typosquatting.original.threat, "malicious");
+  assert.deepEqual(result.body, mockThreatResponse);
 });
 
 test("retries transient fetch failures before succeeding", async () => {
@@ -136,33 +133,5 @@ test("returns 400 for missing URL", async () => {
 
   const result = await runRequest(app, {}, "http://localhost:3000");
   assert.equal(result.status, 400);
-  assert.equal(result.body.error, "No URL provided or invalid format");
-});
-
-test("generates and filters typosquatting variants correctly", async () => {
-  const app = createApp({
-    apiKey: "test-key",
-    retries: 0,
-    allowedOrigins: ["http://localhost:3000"],
-    fetchImpl: async () => ({
-      ok: true,
-      json: async () => ({})
-    })
-  });
-
-  const result = await runRequest(app, { url: "https://google.com" }, "http://localhost:3000");
-  assert.equal(result.status, 200);
-  assert.ok(result.body.typosquatting);
-  
-  const variants = result.body.typosquatting.variants;
-  assert.ok(variants.length > 0 && variants.length <= 20);
-
-  const categories = new Set(variants.map(v => v.category));
-  assert.ok(categories.has("homoglyph"));
-  assert.ok(categories.has("tld"));
-  
-  variants.forEach(v => {
-    assert.ok(v.distance <= 2);
-    assert.ok(v.threat === "suspicious" || v.threat === "malicious");
-  });
+  assert.equal(result.body.error, "No URL provided");
 });
