@@ -2,39 +2,18 @@
 // LOADER & THEME
 // ─────────────────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
-  const loader = document.getElementById('loader');
-  const main = document.getElementById('mainPage');
-  if (loader && main) {
-    if (sessionStorage.getItem('introShown')) {
-      loader.style.display = 'none';
-      main.classList.remove('hidden');
-    } else {
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          loader.classList.add('fade-out');
-          setTimeout(() => {
-            loader.style.display = 'none';
-            main.classList.remove('hidden');
-            sessionStorage.setItem('introShown', 'true');
-          }, 500);
-        }, 3200);
-      });
-    }
-  }
-});
-
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted && sessionStorage.getItem('introShown')) {
+window.addEventListener('load', () => {
+  setTimeout(() => {
     const loader = document.getElementById('loader');
     const main = document.getElementById('mainPage');
-    if (loader) loader.style.display = 'none';
-    if (main) {
-      main.classList.remove('hidden');
-      main.style.animation = 'none';
-      main.style.opacity = '1';
+    if (loader && main) {
+      loader.classList.add('fade-out');
+      setTimeout(() => {
+        loader.style.display = 'none';
+        main.classList.remove('hidden');
+      }, 500);
     }
-  }
+  }, 3200);
 });
 
 (function initTheme() {
@@ -152,7 +131,7 @@ async function sendMessage() {
     }
 
     const report = await response.json();
-
+    
     // Hide typing indicator
     if (typing) {
       typing.classList.add('hidden');
@@ -186,7 +165,7 @@ function appendMessage(role, messageText) {
 
   const msgDiv = document.createElement('div');
   msgDiv.className = `chat-msg ${role}`;
-
+  
   if (role === 'user') {
     msgDiv.innerHTML = `
       <div class="chat-bubble user-bubble">

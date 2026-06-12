@@ -2,48 +2,27 @@
 // LOADER
 // ─────────────────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
 
-  const loader = document.getElementById('loader');
-  const main = document.getElementById('mainPage');
+  setTimeout(() => {
 
-  if (sessionStorage.getItem('introShown')) {
-    loader.style.display = 'none';
-    main.classList.remove('hidden');
-  } else {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-
-        loader.classList.add('fade-out');
-
-        setTimeout(() => {
-          loader.style.display = 'none';
-          main.classList.remove('hidden');
-          sessionStorage.setItem('introShown', 'true');
-
-          // Move focus to main content after loader for screen readers
-          main.setAttribute('tabindex', '-1');
-          main.focus();
-
-        }, 500);
-
-      }, 3200);
-    });
-  }
-
-});
-
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted && sessionStorage.getItem('introShown')) {
     const loader = document.getElementById('loader');
     const main = document.getElementById('mainPage');
-    if (loader) loader.style.display = 'none';
-    if (main) {
+
+    loader.classList.add('fade-out');
+
+    setTimeout(() => {
+      loader.style.display = 'none';
       main.classList.remove('hidden');
-      main.style.animation = 'none';
-      main.style.opacity = '1';
-    }
-  }
+
+      // Move focus to main content after loader for screen readers
+      main.setAttribute('tabindex', '-1');
+      main.focus();
+
+    }, 500);
+
+  }, 3200);
+
 });
 
 // ─────────────────────────────
@@ -457,7 +436,7 @@ function calculateRiskScore(url, isThreat) {
       score += 10;
       breakdown.push({ text: 'Excessive subdomains used', type: 'warning' });
     } else {
-      breakdown.push({ text: 'Domain structure appears normal', type: 'safe' });
+       breakdown.push({ text: 'Domain structure appears normal', type: 'safe' });
     }
   } catch (e) {
     score += 20;
@@ -547,12 +526,13 @@ function showResult(type, title, desc, url, threats) {
 
       <div class="result-icon" aria-hidden="true">
 
-        ${type === 'loading'
-      ? '<div class="spinner"></div>'
-      : type === 'scan-loading'
-        ? ''
-        : `<span>${icons[type]}</span>`
-    }
+        ${
+          type === 'loading'
+            ? '<div class="spinner"></div>'
+            : type === 'scan-loading'
+            ? ''
+            : `<span>${icons[type]}</span>`
+        }
 
       </div>
 
@@ -561,9 +541,9 @@ function showResult(type, title, desc, url, threats) {
         <div class="result-desc">${desc}</div>
         ${url ? `<div class="result-url" aria-label="Scanned URL: ${url}">${url}</div>` : ''}
         ${threats && threats.length
-      ? `<div class="threat-tags" role="list" aria-label="Detected threats">${threats.map(t =>
-        `<span class="threat-tag" role="listitem">${t}</span>`).join('')}</div>`
-      : ''}
+          ? `<div class="threat-tags" role="list" aria-label="Detected threats">${threats.map(t =>
+              `<span class="threat-tag" role="listitem">${t}</span>`).join('')}</div>`
+          : ''}
         ${(type === 'safe' || type === 'danger') ? `
           <div class="export-btns">
             <button type="button" onclick="downloadPDF()" class="export-btn export-btn-pdf" aria-label="Download scan report as PDF">⬇ Download PDF</button>
