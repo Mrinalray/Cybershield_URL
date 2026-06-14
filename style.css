@@ -1295,3 +1295,139 @@ html.light-mode .result-url { background: rgba(0,0,0,0.06); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+/* ── Screenshot URL Detection ── */
+.screenshot-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.screenshot-divider::before,
+.screenshot-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+.screenshot-dropzone {
+  border: 2px dashed rgba(0,255,180,0.25);
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(0,255,180,0.02);
+}
+
+.screenshot-dropzone:hover,
+.screenshot-dropzone.dragover {
+  border-color: #00ffb4;
+  background: rgba(0,255,180,0.06);
+}
+
+.screenshot-dropzone:focus-visible {
+  outline: 2px solid #00ffb4;
+  outline-offset: 3px;
+}
+
+.dropzone-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.dropzone-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+  margin-bottom: 4px;
+}
+
+.dropzone-sub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.screenshot-result {
+  margin-top: 12px;
+}
+
+.screenshot-processing {
+  font-size: 13px;
+  color: #94a3b8;
+  padding: 10px;
+  text-align: center;
+}
+
+.screenshot-no-urls {
+  font-size: 13px;
+  color: #64748b;
+  padding: 10px;
+  text-align: center;
+}
+
+.screenshot-error {
+  font-size: 13px;
+  color: #f87171;
+  padding: 10px;
+  text-align: center;
+}
+
+.screenshot-urls-found {
+  background: var(--card-bg, #1e293b);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.screenshot-urls-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #00ffb4;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.screenshot-urls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.screenshot-url-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.screenshot-url-text {
+  font-size: 12px;
+  color: #94a3b8;
+  word-break: break-all;
+  flex: 1;
+}
+
+.screenshot-scan-btn {
+  background: rgba(0,255,180,0.1);
+  border: 1px solid rgba(0,255,180,0.3);
+  color: #00ffb4;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.screenshot-scan-btn:hover {
+  background: rgba(0,255,180,0.2);
+}
