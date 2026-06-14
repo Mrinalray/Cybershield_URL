@@ -78,6 +78,38 @@
           <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
         </div>
 
+        <!-- Screenshot Upload -->
+        <div class="screenshot-section" id="screenshotSection">
+          <div class="screenshot-divider">
+            <span>or</span>
+          </div>
+          <div
+            class="screenshot-dropzone"
+            id="screenshotDropzone"
+            role="button"
+            tabindex="0"
+            aria-label="Upload a screenshot to extract URLs"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+            onclick="document.getElementById('screenshotInput').click()"
+            onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('screenshotInput').click()"
+          >
+            <div class="dropzone-icon" aria-hidden="true">📸</div>
+            <div class="dropzone-text">Drag & drop a screenshot here</div>
+            <div class="dropzone-sub">or click to upload · JPG, PNG, WEBP</div>
+            <input
+              type="file"
+              id="screenshotInput"
+              accept="image/*"
+              style="display:none"
+              onchange="handleScreenshotUpload(event)"
+              aria-label="Choose screenshot file"
+            >
+          </div>
+          <div id="screenshotResult" class="screenshot-result" aria-live="polite"></div>
+        </div>
+
         <div id="result"></div>
       </div>
 
@@ -168,6 +200,7 @@
     </footer>
   </div>
 
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <script src="script.js"></script>
 </body>
 </html>

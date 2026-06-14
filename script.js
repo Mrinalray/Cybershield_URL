@@ -40,7 +40,126 @@ window.addEventListener('pageshow', (e) => {
     if (main)   { main.classList.remove('hidden'); main.style.opacity = '1'; }
   }
 });
+// ─────────────────────────────
+// SCREENSHOT URL DETECTION
+// ─────────────────────────────
 
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('screenshotDropzone').classList.add('dragover');
+}
+
+function handleDragLeave(e) {
+  document.getElementById('screenshotDropzone').classList.remove('dragover');
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('screenshotDropzone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    processScreenshot(file);
+  }
+}
+
+function handleScreenshotUpload(e) {
+  const file = e.target.files[0];
+  if (file) processScreenshot(file);
+}
+
+function processScreenshot(file) {
+  const resultEl = document.getElementById('screenshotResult');
+  resultEl.innerHTML = `<div class="screenshot-processing">🔍 Extracting URLs from screenshot...</div>`;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // Draw image to canvas for Tesseract
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      // Use Tesseract.js to extract text
+      Tesseract.recognize(canvas, 'eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            resultEl.innerHTML = `<div class="screenshot-processing">🔍 Scanning image... ${Math.round(m.progress * 100)}%</div>`;
+          }
+        }
+      }).then(({ data: { text } }) => {
+        const urls = extractUrlsFromText(text);
+        showScreenshotUrls(urls, text);
+      }).catch(err => {
+        resultEl.innerHTML = `<div class="screenshot-error">❌ OCR failed: ${err.message}</div>`;
+      });
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function extractUrlsFromText(text) {
+  // Match URLs including http, https, and bare domains
+  const urlRegex = /(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,6}\b(?:[-a-zA-Z0-9@:%_+.~#?&/=]*)/g;
+  const matches = text.match(urlRegex) || [];
+
+  // Filter out noise — must have a dot and reasonable length
+  return [...new Set(
+    matches
+      .filter(u => u.includes('.') && u.length > 4 && u.length < 200)
+      .filter(u => !/^\d+\.\d+$/.test(u)) // exclude version numbers like 1.0
+      .map(u => u.trim().replace(/[.,;:'")\]>]+$/, '')) // strip trailing punctuation
+  )].slice(0, 10); // max 10 URLs
+}
+
+function showScreenshotUrls(urls, rawText) {
+  const resultEl = document.getElementById('screenshotResult');
+
+  if (urls.length === 0) {
+    resultEl.innerHTML = `
+      <div class="screenshot-no-urls">
+        <span aria-hidden="true">🔎</span>
+        No URLs detected in the screenshot. Try a clearer image.
+      </div>
+    `;
+    return;
+  }
+
+  resultEl.innerHTML = `
+    <div class="screenshot-urls-found" role="region" aria-label="URLs extracted from screenshot">
+      <div class="screenshot-urls-header">
+        <span aria-hidden="true">🔗</span>
+        ${urls.length} URL${urls.length > 1 ? 's' : ''} found — click to scan
+      </div>
+      <div class="screenshot-urls-list" role="list">
+        ${urls.map(url => `
+          <div class="screenshot-url-item" role="listitem">
+            <span class="screenshot-url-text">${url}</span>
+            <button
+              type="button"
+              class="screenshot-scan-btn"
+              onclick="scanExtractedUrl('${url.replace(/'/g, "\\'")}')"
+              aria-label="Scan ${url}"
+            >
+              Scan
+            </button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function scanExtractedUrl(url) {
+  // Fill the URL input and trigger scan
+  const input = document.getElementById('urlInput');
+  input.value = url;
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  checkSecurity();
+}
 // ═══════════════════════════════════
 // THEME TOGGLE
 // ═══════════════════════════════════
