@@ -96,14 +96,17 @@
 git clone https://github.com/mrinalray/Cybershield_URL.git
 cd Cybershield_URL
 
-# 2. Configure environment variables
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment variables
 cp .env.example .env
 # Open .env and fill in API_KEY and GEMINI_API_KEY
 
-# 3. Start the backend
+# 4. Start the backend
 node server.js
 
-# 4. Open frontend
+# 5. Open frontend
 # Open index.html in your browser
 ```
 
