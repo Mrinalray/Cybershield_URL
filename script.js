@@ -1,215 +1,245 @@
 // ═══════════════════════════════════
-// THEME — init immediately to prevent flash
+// QR CODE SCANNER
 // ═══════════════════════════════════
-(function initTheme() {
-  const saved = localStorage.getItem('theme') || 'dark';
-  if (saved === 'light') {
-    document.documentElement.classList.add('light-mode');
-  }
-})();
 
-// ═══════════════════════════════════
-// LOADER — skip on back-navigation
-// ═══════════════════════════════════
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  const main   = document.getElementById('mainPage');
-  if (!loader || !main) return;
+let cameraStream     = null;
+let cameraAnimFrame  = null;
 
-  if (sessionStorage.getItem('introShown')) {
-    loader.style.display = 'none';
-    main.classList.remove('hidden');
-  } else {
-    setTimeout(() => {
-      loader.classList.add('fade-out');
-      setTimeout(() => {
-        loader.style.display = 'none';
-        main.classList.remove('hidden');
-        sessionStorage.setItem('introShown', 'true');
-      }, 500);
-    }, 3200);
-  }
-});
+// ── Helpers ──
 
-// Handle bfcache (back/forward navigation)
-window.addEventListener('pageshow', (e) => {
-  if (e.persisted) {
-    const loader = document.getElementById('loader');
-    const main   = document.getElementById('mainPage');
-    if (loader) loader.style.display = 'none';
-    if (main)   { main.classList.remove('hidden'); main.style.opacity = '1'; }
-  }
-});
-
-// ═══════════════════════════════════
-// THEME TOGGLE
-// ═══════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('themeToggle');
-  if (btn) {
-    btn.addEventListener('click', () => {
-      const isLight = document.documentElement.classList.toggle('light-mode');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    });
-  }
-
-  // Build team grid
-  buildTeam();
-
-  // Load persisted session stats
-  loadStats();
-});
-
-// ═══════════════════════════════════
-// TEAM
-// ═══════════════════════════════════
-const team = [
-  { name: "Mrinal Roy",     img: "Mrinal.jpg"   },
-  { name: "Rahul Sah",      img: "Rahul.jpg"    },
-  { name: "Swastika Shaw",  img: "Swastika.jpg" },
-  { name: "Arpita Roy",     img: "Arpita.jpg"   },
-  { name: "Disha Samanta",  img: "Disha.jpg"    },
-];
-
-function buildTeam() {
-  const grid = document.getElementById('teamGrid');
-  if (!grid) return;
-  grid.innerHTML = team.map(m => {
-    const initials = m.name.split(' ').map(w => w[0]).join('');
-    return `
-      <div class="member-card">
-        <div class="member-avatar">
-          <img src="${m.img}" alt="${m.name}" onerror="this.parentElement.innerHTML='${initials}'">
-        </div>
-        <div class="member-name">${m.name}</div>
-      </div>`;
-  }).join('');
-}
-
-let teamOpen = false;
-
-function toggleTeam() {
-  teamOpen = !teamOpen;
-  const wrap   = document.getElementById('teamGridWrap');
-  const toggle = document.getElementById('teamToggle');
-  if (!wrap || !toggle) return;
-  wrap.classList.toggle('open', teamOpen);
-  toggle.classList.toggle('open', teamOpen);
-  toggle.setAttribute('aria-label', teamOpen ? 'Hide team' : 'Show team');
-}
-
-// ═══════════════════════════════════
-// SCANNER
-// ═══════════════════════════════════
-let totalScans = 0, safeCount = 0, dangerCount = 0;
-
-function loadStats() {
-  const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
-  totalScans = history.length;
-  safeCount  = history.filter(r => r.status === 'safe').length;
-  dangerCount = history.filter(r => r.status === 'danger').length;
-  renderStats();
-}
-
-function renderStats() {
-  const t = document.getElementById('totalScans');
-  const s = document.getElementById('safeCount');
-  const d = document.getElementById('dangerCount');
-  if (t) t.textContent = totalScans;
-  if (s) s.textContent = safeCount;
-  if (d) d.textContent = dangerCount;
-}
-
-function fillExample(url) {
-  const input = document.getElementById('urlInput');
-  if (input) { input.value = url; input.focus(); }
-}
-
-function saveToHistory(url, status, threats) {
-  const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
-  history.push({ url, status, threats, timestamp: new Date().toISOString() });
-  localStorage.setItem('cybershield_history', JSON.stringify(history));
-}
-
-function showResult(type, title, desc, url, threats) {
-  const el = document.getElementById('result');
+function showQRError(msg) {
+  const el = document.getElementById('qrError');
   if (!el) return;
-  el.innerHTML = `
-    <div class="result-card ${type}">
-      <div class="result-icon">
-        ${type === 'loading'
-          ? '<div class="spinner"></div>'
-          : `<span>${type === 'safe' ? '✓' : type === 'danger' ? '✕' : '!'}</span>`}
-      </div>
-      <div class="result-body">
-        <div class="result-title">${title}</div>
-        <div class="result-desc">${desc}</div>
-        ${url ? `<div class="result-url">${url}</div>` : ''}
-        ${threats && threats.length
-          ? `<div class="threat-tags">${threats.map(t => `<span class="threat-tag">${t}</span>`).join('')}</div>`
-          : ''}
-      </div>
-    </div>`;
+  el.textContent = msg;
+  el.classList.remove('hidden');
 }
 
-async function checkSecurity() {
-  const input = document.getElementById('urlInput');
-  const btn   = document.getElementById('scanBtn');
-  const text  = input ? input.value.trim() : '';
+function hideQRError() {
+  const el = document.getElementById('qrError');
+  if (el) el.classList.add('hidden');
+}
 
-  if (!text) {
-    showResult('error', 'Enter a URL', 'Paste the URL you want to check above.', '', []);
+function resetQRDecoded() {
+  const decoded  = document.getElementById('qrDecoded');
+  const preview  = document.getElementById('qrPreview');
+  if (decoded) decoded.classList.add('hidden');
+  if (preview) { preview.src = ''; preview.classList.add('hidden'); }
+}
+
+// ── Core decode ──
+
+function decodeQRFromImageData(imageData, width, height) {
+  if (typeof jsQR === 'undefined') {
+    showQRError('QR library not loaded. Check your internet connection and reload.');
+    return null;
+  }
+  return jsQR(imageData, width, height);
+}
+
+function processQRResult(data) {
+  hideQRError();
+  const decoded  = document.getElementById('qrDecoded');
+  const urlEl    = document.getElementById('qrDecodedUrl');
+  const inputEl  = document.getElementById('urlInput');
+
+  if (!data) {
+    showQRError('No QR code detected. Try a clearer or higher-resolution image.');
+    if (decoded) decoded.classList.add('hidden');
     return;
   }
 
-  let url = text;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-  }
+  if (urlEl)   urlEl.textContent = data;
+  if (decoded) decoded.classList.remove('hidden');
 
-  if (btn) btn.disabled = true;
-  showResult('loading', 'Scanning...', 'Checking against threat databases…', url, []);
-
-  try {
-    const apiHost = 'https://cybershield-30a3.onrender.com';
-
-    const response = await fetch(`${apiHost}/check`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url })
-    });
-
-    if (!response.ok) throw new Error(`Server error ${response.status}`);
-    const data = await response.json();
-    console.log("API Response:", data);
-    if (data.error) throw new Error(data.error);
-
-    if (data.matches && data.matches.length > 0) {
-      const threats = [...new Set(data.matches.map(m => m.threatType.replace(/_/g, ' ')))];
-      totalScans++; dangerCount++;
-      renderStats();
-      saveToHistory(url, 'danger', data.matches.map(m => m.threatType));
-      showResult('danger', '⚠ Threat Detected', 'This URL is flagged as dangerous. Do not visit it.', url, threats);
-    } else {
-      totalScans++; safeCount++;
-      renderStats();
-      saveToHistory(url, 'safe', []);
-      showResult('safe', '✓ URL is Safe', 'No known threats detected via Google Safe Browsing.', url, []);
-    }
-
-  } catch (err) {
-    showResult('error', 'Backend Not Connected',
-      `Ensure your backend server is running.<br><small>Error: ${err.message}</small>`, '', []);
-  } finally {
-    if (btn) btn.disabled = false;
+  // Auto-fill the URL input if it looks like a URL
+  if (inputEl && (data.startsWith('http://') || data.startsWith('https://'))) {
+    inputEl.value = data;
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('urlInput');
-  if (input) {
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') checkSecurity();
-    });
+function decodeQRFromImage(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width  = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const code = decodeQRFromImageData(imageData.data, canvas.width, canvas.height);
+  processQRResult(code ? code.data : null);
+}
+
+// ── File upload ──
+
+function handleQRFileInput(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showQRError('Please upload a valid image file (PNG, JPG, GIF, WebP).');
+    return;
   }
-});
+
+  hideQRError();
+  resetQRDecoded();
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const preview = document.getElementById('qrPreview');
+    if (preview) {
+      preview.src = e.target.result;
+      preview.classList.remove('hidden');
+    }
+
+    const img   = new Image();
+    img.onload  = () => decodeQRFromImage(img);
+    img.onerror = () => showQRError('Could not load image. Please try a different file.');
+    img.src     = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // Reset so the same file can be re-selected
+  event.target.value = '';
+}
+
+// ── Drag and drop ──
+
+function handleQRDragOver(event) {
+  event.preventDefault();
+  const zone = document.getElementById('qrDropZone');
+  if (zone) zone.classList.add('drag-over');
+}
+
+function handleQRDragLeave(event) {
+  const zone = document.getElementById('qrDropZone');
+  if (zone) zone.classList.remove('drag-over');
+}
+
+function handleQRDrop(event) {
+  event.preventDefault();
+  const zone = document.getElementById('qrDropZone');
+  if (zone) zone.classList.remove('drag-over');
+
+  const file = event.dataTransfer.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showQRError('Please drop a valid image file (PNG, JPG, GIF, WebP).');
+    return;
+  }
+
+  // Reuse file handler via fake event object
+  handleQRFileInput({ target: { files: [file], value: '' } });
+}
+
+// ── Scan extracted URL ──
+
+function scanExtractedQRUrl() {
+  const urlEl  = document.getElementById('qrDecodedUrl');
+  const inputEl = document.getElementById('urlInput');
+  if (!urlEl) return;
+
+  const url = urlEl.textContent.trim();
+  if (!url) return;
+
+  if (inputEl) inputEl.value = url;
+  checkSecurity();
+
+  // Scroll result into view
+  setTimeout(() => {
+    const result = document.getElementById('result');
+    if (result) result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+// ── Camera ──
+
+function toggleCamera() {
+  if (cameraStream) {
+    stopCamera();
+  } else {
+    startCamera();
+  }
+}
+
+async function startCamera() {
+  hideQRError();
+  resetQRDecoded();
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showQRError('Camera not supported in this browser. Please upload an image instead.');
+    return;
+  }
+
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }
+    });
+
+    const video   = document.getElementById('cameraFeed');
+    const section = document.getElementById('cameraSection');
+    const btn     = document.getElementById('cameraBtn');
+
+    if (video)   { video.srcObject = cameraStream; }
+    if (section) section.classList.remove('hidden');
+    if (btn)     btn.textContent = 'Stop camera';
+
+    scanCameraFrame();
+
+  } catch (err) {
+    cameraStream = null;
+    if (err.name === 'NotAllowedError') {
+      showQRError('Camera permission denied. Please allow camera access or upload an image instead.');
+    } else {
+      showQRError('Camera unavailable. Please upload a QR code image instead.');
+    }
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(t => t.stop());
+    cameraStream = null;
+  }
+  if (cameraAnimFrame) {
+    cancelAnimationFrame(cameraAnimFrame);
+    cameraAnimFrame = null;
+  }
+
+  const section = document.getElementById('cameraSection');
+  const btn     = document.getElementById('cameraBtn');
+  const video   = document.getElementById('cameraFeed');
+
+  if (section) section.classList.add('hidden');
+  if (video)   video.srcObject = null;
+  if (btn) {
+    btn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+      Use camera`;
+  }
+}
+
+function scanCameraFrame() {
+  const video  = document.getElementById('cameraFeed');
+  const canvas = document.getElementById('cameraCanvas');
+  if (!video || !canvas || !cameraStream) return;
+
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    canvas.width  = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = decodeQRFromImageData(imageData.data, canvas.width, canvas.height);
+
+    if (code) {
+      stopCamera();
+      processQRResult(code.data);
+      return; // QR found — stop scanning
+    }
+  }
+
+  cameraAnimFrame = requestAnimationFrame(scanCameraFrame);
+}
