@@ -46,13 +46,53 @@ Actions may include:
 ## Warning the contributor
 Removing inappropriate content
 Temporary or permanent ban from the project
-5. Reporting Issues
-If you experience or witness unacceptable behavior, please report it by:
 
-## Opening a private issue
-Contacting the maintainers directly
-All reports will be handled confidentially.
+## 5. Reporting Issues
 
+If you experience or witness behavior that violates this Code of Conduct, please report it directly to our community safety team at:
+
+📧 **maintainer-conduct@cybershield.org**
+
+You may also open a private issue in the repository (if enabled).
+
+*Note: To help us address the issue effectively, please include as much relevant context as possible (such as links, screenshots, or repository references).*
+
+## Response Expectations
+
+To ensure transparency, fairness, and trust within the community, project maintainers commit to the following timeline and process:
+
+* **Acknowledgment:** We will acknowledge receipt of your report within **72 hours**.
+* **Fair Review:** All reports will be reviewed objectively, respectfully, and with strict confidentiality.
+* **Clarification:** If required, we may request additional information or context before proceeding.
+* **Investigation:** A thorough investigation will be conducted using available evidence and relevant communication.
+* **Resolution:** Appropriate action will be taken based on severity and impact, and the reporter will be notified once the process is complete when possible.
+
+## Investigation Process
+
+When a report is submitted, our team follows a structured process:
+
+1. **Assessment:** Maintainers review the initial report and any attached evidence.
+2. **Fact-Finding:** Additional context may be gathered from public repository data or private outreach if necessary.
+3. **Deliberation:** The maintainer team evaluates the situation and determines appropriate action collectively.
+4. **Resolution & Closure:** Actions are executed (if required), and the report is formally closed with notification to the reporter when appropriate.
+
+## Confidentiality
+
+All reports are handled with the highest level of confidentiality. Details, identities, and communications will only be shared with maintainers directly involved in resolving the issue.
+
+## Non-Retaliation Policy
+
+CyberShield strictly prohibits retaliation against any individual who reports misconduct or participates in an investigation in good faith. Raising concerns respectfully is fully protected, and no contributor will face harassment, discrimination, or adverse consequences for doing so.
+
+## Possible Outcomes
+
+Depending on the nature and severity of the violation, possible actions include:
+
+* A private warning and clarification of community expectations
+* A request to modify or remove inappropriate content
+* Temporary restriction or suspension from project participation
+* Permanent removal from the CyberShield organization and related repositories
+* Any other action necessary to maintain a safe, respectful, and inclusive environment
 6. Attribution
 This Code of Conduct is adapted from the Contributor Covenant (version 2.1) https://www.contributor-covenant.org/
 

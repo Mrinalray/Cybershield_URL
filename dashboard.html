@@ -3,92 +3,250 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberShield Threat Analytics Dashboard</title>
+  <title>CyberShield — Threat Analytics Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png" />
+  <script>
+    // Prevent theme flash
+    (function() {
+      const t = localStorage.getItem('theme') || 'dark';
+      if (t === 'light') document.documentElement.classList.add('light-mode');
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- ── Theme Toggle ── -->
+  <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
+    <div class="toggle-icon-wrap">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    </div>
+  </button>
+
   <div class="wrapper">
 
-    <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
-      <div class="toggle-icon-wrap">
-        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="4"/>
-          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
-        </svg>
-        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-        </svg>
-      </div>
-    </button>
-
     <header class="header">
-      <div class="logo-badge">
-        <div class="dot"></div>
-        CyberShield Analytics
-      </div>
-      <h1>Threat Analytics Dashboard</h1>
-      <p class="subtitle">Track your historical URL scans, threat detection trends, and export logs for deeper analysis.</p>
+      <div class="logo-badge"><div class="dot"></div>CyberShield Analytics</div>
+      <h1>Threat<br><span>Analytics Dashboard</span></h1>
+      <p class="subtitle">Track your historical URL scans, threat detection trends, and real-time safe metrics.</p>
     </header>
 
     <div class="dashboard-cta">
-      <a class="scan-btn" href="index.html">Back to URL Scanner</a>
+      <a class="scan-btn" href="index.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Scanner
+      </a>
+      <a class="scan-btn" href="chat.html" style="background:var(--card-bg); color:var(--accent-cyan); border:1px solid var(--card-border);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Scam Detector
+      </a>
+      <button class="scan-btn" id="clearHistoryBtn" style="background:var(--danger-bg); color:var(--danger-color); border:1px solid var(--danger-border);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+        </svg>
+        Clear Log
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-num" id="dbTotalScans">0</div>
+        <div class="stat-label">Total Scans</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="dbSafeRatio">0%</div>
+        <div class="stat-label">Safe Ratio</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="dbThreatsBlocked">0</div>
+        <div class="stat-label">Threats Found</div>
+      </div>
     </div>
 
     <div class="dashboard-grid">
-      <section class="dashboard-card">
-        <h2>Feature Description</h2>
-        <p>CyberShield currently scans URLs in real time and reports whether they are safe or malicious. The Threat Analytics Dashboard adds historical visibility and actionable insight to that workflow.</p>
-
-        <ul>
-          <li>View past scan results with timestamps and outcomes</li>
-          <li>Track frequency of phishing and malware detections over time</li>
-          <li>Visualize data with charts such as bar graphs and line graphs</li>
-          <li>Export logs for further offline analysis</li>
-        </ul>
-
-        <h3>Proposed Solution</h3>
-        <ul>
-          <li>Create a new dashboard page: <code>dashboard.html</code></li>
-          <li>Use <strong>Chart.js</strong> or <strong>D3.js</strong> for visualization</li>
-          <li>Store scan results in local storage for demo purposes</li>
-          <li>Plan for backend DB persistence in a future release</li>
-          <li>Add a navigation link from the main page to the dashboard</li>
-        </ul>
-      </section>
-
-      <section class="dashboard-card">
-        <h2>Demo Visualization</h2>
-        <div class="chart-card">
-          <p>Chart placeholders will appear here once analytics are implemented.</p>
-          <div class="chart-placeholder">Bar / Line Graphs</div>
+      <section class="dashboard-card" style="grid-column: span 2;">
+        <h2>Threat Distribution</h2>
+        <div style="position:relative; height:280px; width:100%">
+          <canvas id="analyticsChart"></canvas>
         </div>
       </section>
 
       <section class="dashboard-card dashboard-note">
-        <h2>Demo Mode</h2>
-        <p>In the demo version, scan records are stored locally in the browser. A backend database can be added later to persist results and support long-term analytics.</p>
+        <h2>About This Data</h2>
+        <p>Metrics are sourced from your browser's local scan history. This data stays on your device and is never sent to any server.</p>
+        <p style="margin-top:14px">Use the Clear Log button to permanently remove all scan records and reset your statistics.</p>
+        <div style="margin-top:20px; padding:14px; background:var(--warn-bg); border:1px solid var(--warn-border); border-radius:10px">
+          <p style="color:var(--warn-color); font-size:12px; font-weight:600; margin:0">
+            ⚠ Data resets on browser cache clear.
+          </p>
+        </div>
       </section>
     </div>
 
-    <footer class="main-footer">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <div class="logo-badge"><div class="dot"></div>CyberShield</div>
-          <p>Analytics and threat visibility for safer browsing.</p>
-        </div>
-        <div class="footer-links">
-          <div class="footer-col">
-            <h4>Navigation</h4>
-            <a href="index.html">Home</a>
-            <a href="docs.html">Documentation</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">&copy; 2026 CyberShield URL Scanner</div>
-    </footer>
+    <!-- Recent Scans Table -->
+    <section class="dashboard-card" style="margin-top:16px">
+      <h2>Recent Scans</h2>
+      <div id="recentScans" style="font-size:13px"></div>
+    </section>
+
   </div>
 
-  <script src="script.js"></script>
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo-badge"><div class="dot"></div>CyberShield</div>
+        <p>Analytics and threat visibility for safer browsing.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <a href="index.html">URL Scanner</a>
+          <a href="chat.html">Scam Detector</a>
+          <a href="docs.html">Documentation</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 CyberShield URL Scanner</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isLight = document.documentElement.classList.toggle('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
+
+      const total     = history.length;
+      const safeSc    = history.filter(r => r.status === 'safe').length;
+      const dangerSc  = history.filter(r => r.status === 'danger').length;
+      const safeRatio = total > 0 ? Math.round((safeSc / total) * 100) : 0;
+
+      document.getElementById('dbTotalScans').textContent  = total;
+      document.getElementById('dbThreatsBlocked').textContent = dangerSc;
+      document.getElementById('dbSafeRatio').textContent   = `${safeRatio}%`;
+
+      // Threat type breakdown
+      let malware = 0, phishing = 0, unwanted = 0, harmful = 0;
+      history.forEach(r => {
+        if (r.threats && Array.isArray(r.threats)) {
+          r.threats.forEach(t => {
+            if (t === 'MALWARE')                        malware++;
+            if (t === 'SOCIAL_ENGINEERING')             phishing++;
+            if (t === 'UNWANTED_SOFTWARE')              unwanted++;
+            if (t === 'POTENTIALLY_HARMFUL_APPLICATION') harmful++;
+          });
+        }
+      });
+
+      // Resolve colors from CSS vars for chart
+      const isLight = document.documentElement.classList.contains('light-mode');
+      const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+      const tickColor = isLight ? '#3a5580' : '#4a6580';
+
+      const ctx = document.getElementById('analyticsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Safe Scans', 'Malware', 'Phishing', 'Unwanted / Harmful'],
+          datasets: [{
+            label: 'Count',
+            data: [safeSc, malware, phishing, (unwanted + harmful)],
+            backgroundColor: [
+              'rgba(0, 255, 136, 0.5)',
+              'rgba(255, 51, 102, 0.5)',
+              'rgba(255, 204, 0, 0.5)',
+              'rgba(0, 245, 255, 0.5)'
+            ],
+            borderColor: [
+              'rgba(0, 255, 136, 1)',
+              'rgba(255, 51, 102, 1)',
+              'rgba(255, 204, 0, 1)',
+              'rgba(0, 245, 255, 1)'
+            ],
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1, precision: 0, color: tickColor },
+              grid: { color: gridColor }
+            },
+            x: {
+              ticks: { color: tickColor },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+
+      // Recent scans
+      const recentEl = document.getElementById('recentScans');
+      if (history.length === 0) {
+        recentEl.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:24px">No scans recorded yet. <a href="index.html" style="color:var(--accent-cyan)">Scan a URL</a> to get started.</p>';
+      } else {
+        const recent = [...history].reverse().slice(0, 10);
+        recentEl.innerHTML = `
+          <table style="width:100%; border-collapse:collapse">
+            <thead>
+              <tr style="border-bottom:1px solid var(--card-border)">
+                <th style="text-align:left; padding:10px 8px; font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:600">URL</th>
+                <th style="text-align:center; padding:10px 8px; font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:600; white-space:nowrap">Result</th>
+                <th style="text-align:right; padding:10px 8px; font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:600; white-space:nowrap">Scanned</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${recent.map(r => `
+                <tr style="border-bottom:1px solid var(--card-border)">
+                  <td style="padding:10px 8px; color:var(--text-sub); font-family:monospace; font-size:12px; max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">
+                    ${r.url || '—'}
+                  </td>
+                  <td style="padding:10px 8px; text-align:center">
+                    <span style="
+                      display:inline-block; padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; letter-spacing:0.06em;
+                      background:${r.status === 'safe' ? 'var(--safe-bg)' : 'var(--danger-bg)'};
+                      color:${r.status === 'safe' ? 'var(--safe-color)' : 'var(--danger-color)'};
+                      border:1px solid ${r.status === 'safe' ? 'var(--safe-border)' : 'var(--danger-border)'}
+                    ">${r.status === 'safe' ? 'SAFE' : 'DANGER'}</span>
+                  </td>
+                  <td style="padding:10px 8px; color:var(--text-muted); font-size:11px; text-align:right; white-space:nowrap">
+                    ${r.timestamp ? new Date(r.timestamp).toLocaleString(undefined, {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : '—'}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`;
+      }
+
+      // Clear button
+      document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        if (confirm('Permanently delete your entire scan history?')) {
+          localStorage.removeItem('cybershield_history');
+          window.location.reload();
+        }
+      });
+    });
+  </script>
 </body>
 </html>

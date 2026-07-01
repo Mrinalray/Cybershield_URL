@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberShield — Shared Report</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script>
+    (function() {
+      const t = localStorage.getItem('theme') || 'dark';
+      if (t === 'light') document.documentElement.classList.add('light-mode');
+    })();
+  </script>
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    body, .share-card { transition: background-color 0.3s ease,color 0.3s ease; }
+    .share-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-top: 20px; margin-bottom: 6px; }
+    .share-value { font-size: 16px; color: var(--text); word-break: break-word; }
+    .share-value.safe   { color: var(--safe-color); font-weight: 700; }
+    .share-value.danger { color: var(--danger-color); font-weight: 700; }
+    .share-tag { display: inline-block; padding: 4px 12px; border-radius: 6px; background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger-color); margin: 4px 4px 0 0; font-size: 12px; font-weight: 600; }
+    .loading-msg { color: var(--text-muted); text-align: center; padding: 40px; font-size: 14px; }
+    .error-msg   { color: var(--danger-color); text-align: center; padding: 40px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
+    <div class="toggle-icon-wrap">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    </div>
+  </button>
+
+  <div class="share-card" style="position:relative; z-index:1">
+    <div class="logo-badge" style="margin-bottom:20px"><div class="dot"></div>CyberShield Shared Report</div>
+
+    <div id="reportContent">
+      <p class="loading-msg">Loading report…</p>
+    </div>
+
+    <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--card-border)">
+      <a href="index.html" class="scan-btn" style="display:inline-flex">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Scan Your Own URL
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isLight = document.documentElement.classList.toggle('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+
+    async function loadReport() {
+      const params = new URLSearchParams(window.location.search);
+      const id     = params.get('id');
+      const el     = document.getElementById('reportContent');
+
+      if (!id) {
+        el.innerHTML = '<p class="error-msg">Invalid share link — no report ID found.</p>';
+        return;
+      }
+
+      const apiHost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000'
+        : 'https://cybershield-sxz0.onrender.com';
+
+      try {
+        const response = await fetch(`${apiHost}/share/${id}`);
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const data = await response.json();
+
+        const isSafe      = data.resultType && data.resultType.includes('Safe');
+        const statusClass = isSafe ? 'safe' : 'danger';
+
+        el.innerHTML = `
+          <div class="share-label">Scanned URL</div>
+          <div class="share-value" style="font-family:monospace; font-size:14px">${data.url || '—'}</div>
+
+          <div class="share-label">Result</div>
+          <div class="share-value ${statusClass}">${data.resultType || '—'}</div>
+
+          <div class="share-label">Risk Score</div>
+          <div class="share-value">${data.riskScore != null ? data.riskScore + '/100' : '—'}</div>
+
+          <div class="share-label">Threats</div>
+          <div class="share-value">
+            ${!data.threats || data.threats.length === 0
+              ? '<span style="color:var(--safe-color); font-weight:600">✓ No threats detected</span>'
+              : data.threats.map(t => `<span class="share-tag">${t}</span>`).join('')
+            }
+          </div>
+
+          <div class="share-label">Generated At</div>
+          <div class="share-value" style="font-size:14px; color:var(--text-sub)">
+            ${data.createdAt ? new Date(data.createdAt).toLocaleString() : '—'}
+          </div>`;
+
+      } catch (err) {
+        el.innerHTML = `<p class="error-msg">Could not load report.<br><small>Make sure the backend is running. (${err.message})</small></p>`;
+      }
+    }
+
+    loadReport();
+  </script>
+</body>
+</html>

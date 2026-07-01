@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberShield — Scam Text Detector</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png" />
+</head>
+<body>
+
+  <!-- ── Loading Screen ── -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-sonar">
+        <div class="loader-core">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#00f5ff">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="loader-brand">CyberShield AI</div>
+      <div class="loader-tagline">Conversational Scam &amp; Fraud Protection</div>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Theme Toggle ── -->
+  <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
+    <div class="toggle-icon-wrap">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    </div>
+  </button>
+
+  <!-- ── Main Page ── -->
+  <main id="mainPage" class="hidden">
+    <div class="wrapper">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="logo-badge">
+          <div class="dot"></div>
+          CyberShield AI
+        </div>
+        <h1>Scam Detector<br><span>Conversational Agent</span></h1>
+        <p class="subtitle">Paste emails, SMS messages, investment pitches, or job offers. Our AI scans for social engineering &amp; phishing signatures.</p>
+      </header>
+
+      <!-- Navigation -->
+      <div class="dashboard-cta">
+        <a class="scan-btn" href="index.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back to URL Scanner
+        </a>
+        <a class="scan-btn" href="dashboard.html" style="background:var(--card-bg); color:var(--accent-cyan); border:1px solid var(--card-border);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Threat Dashboard
+        </a>
+      </div>
+
+      <!-- Chat Interface Card -->
+      <div class="chat-card">
+        <div class="chat-container-header">
+          <span class="chat-status">
+            <span class="chat-status-dot"></span>
+            CyberShield Assistant Online
+          </span>
+          <button onclick="clearChat()" class="example-chip chat-clear-btn">Clear Chat</button>
+        </div>
+
+        <div id="chatHistory" class="chat-history">
+          <div class="chat-msg robot">
+            <div class="chat-avatar">🛡️</div>
+            <div class="chat-bubble">
+              <strong>Welcome to CyberShield Scam Detector!</strong>
+              <p class="chat-welcome-text">Paste any suspicious messages, job offers, banking warnings, or SMS texts. I'll return a structured safety audit. You can also ask follow-up questions about staying safe!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="typingIndicator" class="chat-msg robot typing-msg hidden" style="padding:12px 24px">
+          <div class="chat-avatar">🤖</div>
+          <div class="typing-indicator">
+            <div class="dot-bounce"></div>
+            <div class="dot-bounce"></div>
+            <div class="dot-bounce"></div>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-wrap">
+          <div class="chat-input-row">
+            <textarea
+              id="chatInput"
+              placeholder="Paste or type suspicious message text here to analyze…"
+              rows="2"
+              class="chat-input-textarea"
+              oninput="adjustTextareaHeight(this)"
+            ></textarea>
+            <button class="scan-btn chat-send-btn" id="sendBtn" onclick="sendMessage()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Analyze
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Templates -->
+      <div class="examples chat-examples-container">
+        <span class="examples-label">Try Examples:</span>
+        <button class="example-chip" onclick="fillTemplate('job')">Fake Job Offer</button>
+        <button class="example-chip" onclick="fillTemplate('phishing')">Courier SMS Scam</button>
+        <button class="example-chip" onclick="fillTemplate('otp')">Bank OTP Fraud</button>
+        <button class="example-chip" onclick="fillTemplate('crypto')">Crypto Doubling</button>
+      </div>
+
+      <!-- Scam Type Features -->
+      <div class="features chat-features-container">
+        <div class="feature-item">
+          <div class="feature-icon">🎣</div>
+          <div class="feature-title">Phishing &amp; Impersonation</div>
+          <div class="feature-desc">Catch fake login notifications, courier warnings, or urgent support requests.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💼</div>
+          <div class="feature-title">Fake Recruitment</div>
+          <div class="feature-desc">Scan suspicious part-time task offers and wire payment deposit demands.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📉</div>
+          <div class="feature-title">Investment Schemes</div>
+          <div class="feature-desc">Flag unrealistic returns, crypto doubling schemes, and pressure-selling pitches.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo-badge"><div class="dot"></div>CyberShield AI</div>
+          <p>Conversational LLM scan engine to audit suspect text patterns.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Tools</h4>
+            <a href="index.html">URL Scanner</a>
+            <a href="dashboard.html">Threat Dashboard</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 CyberShield URL Scanner. Powered by Claude AI.</div>
+    </footer>
+  </main>
+
+  <script src="chat.js"></script>
+</body>
+</html>

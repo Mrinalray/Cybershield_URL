@@ -20,20 +20,23 @@ Welcome to the **CyberShield URL Scanner** documentation! This guide provides a 
   - **Loader Management**: Controls the timed fade-out and visibility of the initial loading screen.
   - **Theme Toggle Engine**: Manages the switch between **Dark Mode** and **Light Mode** by updating the body class and persisting preferences.
   - **Team Rendering**: Dynamically builds the team member cards using an internal data array.
-  - **API Orchestrator**: Handles the `POST` request to the backend server and renders the security result status (Safe/Danger).
+  - **Team Rendering**: Dynamically builds the team member cards using an internal data array.
+  - **Drag-and-Drop Handler**: Implements drag-and-drop listeners for screenshots, loads file images as base64, and updates the scanning laser overlay.
+  - **API Orchestrator**: Handles check scans and image URL extraction requests to the server, then automatically triggers URL validation.
 
 ### 3. 🎨 `style.css`
 - **Role**: The comprehensive design system of the application.
 - **Working Principle**:
   - **Dual-Theme Variables**: Uses CSS Custom Properties (`--bg-color`, `--accent-1`, etc.) to switch between the Emerald/Sky Blue (Dark) and Orange/Red (Light) themes instantly.
   - **Grid & Flexbox**: Ensures a modern, pixel-perfect layout that adapts to all screen sizes.
-  - **Micro-Animations**: Defines hover effects, loading rings, and smooth transitions for a "Premium SaaS" feel.
+  - **Micro-Animations**: Defines hover effects, loading rings, drop highlight borders, and the sweep laser scanner animation for files.
 
 ### 4. ⚙️ `server.js`
 - **Role**: The secure Node.js backend proxy.
 - **Working Principle**:
-  - **API Shielding**: Safely hides the Google Safe Browsing API Key on the server-side to prevent exposure in the frontend.
+  - **API Shielding**: Safely hides the Google Safe Browsing and Gemini API Keys on the server-side.
   - **CORS Management**: Configures secure communication between the frontend client and the backend server.
+  - **Multimodal OCR**: Implements the `/api/extract-url` endpoint which passes screenshot base64 streams to Gemini Flash for URL parsing.
   - **Request Validation**: Sanitizes and validates the user-provided URL before sending it to the official security database.
   - **API Proxy**: Acts as a bridge between the user and Google's threat detection infrastructure.
 

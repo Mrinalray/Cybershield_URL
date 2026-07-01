@@ -101,9 +101,15 @@ We welcome:
 1. **Check existing issues** — Avoid duplicate work
 2. **Create an issue** — Describe your proposal
 3. **Wait for approval** — Get feedback before coding
-4. **Create a feature branch** — `git checkout -b feature/your-feature`
+4. **Create a dedicated branch** — Use clear, lowercase, hyphen-separated names prefixed by category:
+   - `feat/feature-name` (new features)
+   - `fix/bug-name` (bug fixes)
+   - `docs/doc-update` (documentation changes)
+   - `style/style-change` (CSS or layout updates)
+   - `refactor/refactoring-task` (code structure refactoring)
+   - `test/test-scenario` (adding or expanding tests)
 5. **Make your changes** — Follow coding standards
-6. **Commit** — Write clear commit messages
+6. **Commit** — Write clear commit messages matching Conventional Commits rules
 7. **Push** — Push to your fork
 8. **Create PR** — Submit pull request with description
 9. **Respond to reviews** — Address feedback
