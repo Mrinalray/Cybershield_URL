@@ -11,7 +11,12 @@
 [![Contributors](https://img.shields.io/github/contributors/mrinalray/Cybershield_URL?style=for-the-badge&color=8b5cf6&label=Contributors)](https://github.com/mrinalray/Cybershield_URL/graphs/contributors)
 [![Stars](https://img.shields.io/github/stars/mrinalray/Cybershield_URL?style=for-the-badge&color=f59e0b)](https://github.com/mrinalray/Cybershield_URL/stargazers)
 
-</div>
+* 🔍 **Real-time URL scanning**
+* 🛡️ **Detects phishing, malware, and social engineering threats**
+* ⚡ **Fast and responsive UI**
+* 🌐 **Uses Google Safe Browsing API**
+* ✅ **Simple and user-friendly interface**
+* 📸 **Screenshot URL Scanner**
 
 ---
 
