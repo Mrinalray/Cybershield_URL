@@ -232,3 +232,107 @@ async function checkSecurity() {
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkSecurity();
 });
+//  SCREENSHOT UPLOAD — OCR URL EXTRACTION
+
+const dropZone   = document.getElementById('dropZone');
+const fileInput  = document.getElementById('fileInput');
+const previewImg = document.getElementById('previewImg');
+const ocrStatus  = document.getElementById('ocrStatus');
+
+const URL_REGEX = /\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?:\/[^\s"'<>]*)?)\b/gi;
+
+function extractUrlsFromText(text) {
+  const matches = text.match(URL_REGEX) || [];
+  return [...new Set(matches.map(m => m.trim()))];
+}
+
+function setOcrStatus(msg, isError = false) {
+  ocrStatus.textContent = msg;
+  ocrStatus.style.color = isError ? '#ff5c7a' : '#94a3b8';
+}
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    fileInput.click();
+  }
+});
+
+['dragenter', 'dragover'].forEach(evt =>
+  dropZone.addEventListener(evt, e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  })
+);
+
+['dragleave', 'drop'].forEach(evt =>
+  dropZone.addEventListener(evt, e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+  })
+);
+
+dropZone.addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if (file) handleImageFile(file);
+});
+
+fileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) handleImageFile(file);
+});
+
+function handleImageFile(file) {
+  if (!file.type.startsWith('image/')) {
+    setOcrStatus('Please upload an image file (PNG, JPG, etc.)', true);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    previewImg.src = e.target.result;
+    previewImg.classList.remove('hidden');
+    runOcr(file);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runOcr(file) {
+  if (typeof Tesseract === 'undefined') {
+    setOcrStatus('OCR engine failed to load. Check your connection.', true);
+    return;
+  }
+
+  setOcrStatus('Reading text from screenshot…');
+
+  try {
+    const { data: { text } } = await Tesseract.recognize(file, 'eng', {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          setOcrStatus(`Reading screenshot… ${Math.round(m.progress * 100)}%`);
+        }
+      }
+    });
+
+    const urls = extractUrlsFromText(text);
+
+    if (urls.length === 0) {
+      setOcrStatus('No URL found in that image. Try a clearer screenshot.', true);
+      return;
+    }
+
+    const chosenUrl = urls[0];
+    document.getElementById('urlInput').value = chosenUrl;
+    setOcrStatus(
+      urls.length > 1
+        ? `Found ${urls.length} URLs — scanning the first: ${chosenUrl}`
+        : `Found URL: ${chosenUrl} — scanning…`
+    );
+
+    checkSecurity();
+  } catch (err) {
+    setOcrStatus('Could not read text from that image. Try a clearer screenshot.', true);
+  }
+}

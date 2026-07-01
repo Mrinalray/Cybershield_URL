@@ -16,6 +16,7 @@ https://cybershield-url.netlify.app
 * ⚡ **Fast and responsive UI**
 * 🌐 **Uses Google Safe Browsing API**
 * ✅ **Simple and user-friendly interface**
+* 📸 **Screenshot URL Scanner**
 
 ---
 

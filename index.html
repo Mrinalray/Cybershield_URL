@@ -59,6 +59,23 @@
             Scan URL
           </button>
         </div>
+        <div class="upload-row">
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button"
+              aria-label="Upload a screenshot to extract and scan a URL">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <div class="drop-zone-text">
+              <strong>Drag & drop a screenshot</strong> or click to upload
+              <span class="drop-zone-sub">We'll extract the URL and scan it automatically</span>
+            </div>
+            <img id="previewImg" class="preview-img hidden" alt="Uploaded screenshot preview">
+          </div>
+          <div id="ocrStatus" class="ocr-status" aria-live="polite"></div>
+        </div>
 
         <div class="examples" role="group" aria-label="Quick example URLs">
           <span class="examples-label" id="examplesLabel">Try:</span>
@@ -159,7 +176,7 @@
 
     </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
