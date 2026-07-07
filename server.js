@@ -1,5 +1,6 @@
 const express  = require('express');
 const cors     = require('cors');
+const { rateLimit } = require('express-rate-limit');
 const dotenv   = require('dotenv');
 dotenv.config();
 
@@ -60,8 +61,17 @@ app.get('/', (req, res) => {
   res.json({ status: 'CyberShield backend running', port: PORT, version: '2.0' });
 });
 
+// ─── Rate Limiter Setup ───
+const checkLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // max 100 requests per windowMs
+  message: { error: 'Too many URL scan requests from this IP, please try again after 15 minutes.' },
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+});
+
 // ─── URL Safe Browsing check ───
-app.post('/check', async (req, res) => {
+app.post('/check', checkLimiter, async (req, res) => {
   const userUrl = req.body.url;
   if (!userUrl) return res.status(400).json({ error: 'No URL provided' });
 
