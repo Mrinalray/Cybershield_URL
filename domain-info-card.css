@@ -1,0 +1,214 @@
+/*
+ * domain-info-card.css
+ * Styles for the Domain Information Card — issue #184 (CyberShield_URL).
+ *
+ * Dark, monospace, "packet inspector" aesthetic — matches the threat-dashboard
+ * design language already established in style.css.
+ *
+ * No dependency on Tailwind or any external component library.
+ */
+
+/* ── Container ─────────────────────────────────────────────────────────────── */
+#domainInfoCard {
+  margin-top: 16px;
+}
+
+/* ── Card shell ────────────────────────────────────────────────────────────── */
+.dic-card {
+  background: #161f27;
+  border: 1px solid #26323d;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular,
+    Menlo, monospace;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+  /* Subtle slide-in when the card first appears */
+  animation: dic-slide-in 0.25s ease;
+}
+
+@keyframes dic-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+.dic-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  background: #10161c;
+  border-bottom: 1px solid #26323d;
+}
+
+.dic-header-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.dic-header-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a8b8c8;
+}
+
+/* ── Idle & error text ─────────────────────────────────────────────────────── */
+.dic-idle,
+.dic-error {
+  padding: 20px 18px;
+  font-size: 0.8rem;
+  color: #5a7080;
+  font-style: italic;
+}
+
+.dic-error {
+  color: #c04a3a;
+}
+
+/* ── Row table ─────────────────────────────────────────────────────────────── */
+.dic-body {
+  padding: 6px 0;
+}
+
+.dic-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 18px;
+  border-bottom: 1px solid rgba(38, 50, 61, 0.6);
+  gap: 12px;
+  /* Micro-animation: rows fade in on render */
+  animation: dic-row-fade 0.2s ease both;
+}
+
+.dic-row:last-child {
+  border-bottom: none;
+}
+
+.dic-row:hover {
+  background: rgba(53, 216, 200, 0.04);
+  transition: background 0.15s ease;
+}
+
+@keyframes dic-row-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Reduced-motion: disable all card/row animations ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .dic-card,
+  .dic-row {
+    animation: none;
+  }
+}
+
+/* ── Label ─────────────────────────────────────────────────────────────────── */
+.dic-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a7080;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dic-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* ── Value ─────────────────────────────────────────────────────────────────── */
+.dic-value {
+  font-size: 0.82rem;
+  text-align: right;
+  word-break: break-all;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Populated value: accent cyan */
+.dic-populated {
+  color: #35d8c8;
+}
+
+/* Empty/missing placeholder: muted amber — visually distinct from "has data" */
+.dic-empty {
+  color: #a8894f;
+  font-style: italic;
+}
+
+/* ── Responsive: <=420px — stack label above value, both left-aligned ──────── */
+@media (max-width: 420px) {
+  .dic-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .dic-value {
+    text-align: left;
+  }
+}
+
+/* ── Light-mode overrides (matches html.light-mode toggle in style.css) ──────── */
+.light-mode .dic-card {
+  background: #f4f7fa;
+  border-color: #d0dde8;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .dic-header {
+  background: #e8eff5;
+  border-color: #d0dde8;
+}
+
+.light-mode .dic-header-title {
+  color: #4a6070;
+}
+
+.light-mode .dic-row {
+  border-color: rgba(208, 221, 232, 0.7);
+}
+
+.light-mode .dic-row:hover {
+  background: rgba(53, 216, 200, 0.06);
+}
+
+.light-mode .dic-label {
+  color: #4a6070;
+}
+
+.light-mode .dic-populated {
+  color: #0e9e8a;
+}
+
+.light-mode .dic-empty {
+  color: #a07830;
+}
+
+.light-mode .dic-idle,
+.light-mode .dic-error {
+  color: #8aa0b0;
+}
+
+.light-mode .dic-error {
+  color: #c04a3a;
+}
