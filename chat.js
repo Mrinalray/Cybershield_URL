@@ -175,7 +175,12 @@ function appendAnalysisReport(report) {
   if (!historyDiv) return;
 
   const classification = report.classification || 'safe';
+  const confidence = report.confidence ?? 0;
 
+  const threatConfidence =
+    classification === 'safe'
+      ? 0
+      : confidence;
   const categories = {
     phishing:         '🎣 Phishing / Credential Theft',
     fake_job:         '💼 Fake Job Offer',
@@ -197,10 +202,10 @@ function appendAnalysisReport(report) {
     <div class="report-score-section">
       <div class="report-score-labels">
         <span>Threat Confidence</span>
-        <span>${report.confidence || 0}%</span>
+        <span>${threatConfidence}%</span>
       </div>
       <div class="report-progress-track">
-        <div class="report-progress-bar classification-${classification}" style="width:${report.confidence || 0}%"></div>
+        <div class="report-progress-bar classification-${classification}" style="width:${threatConfidence}%"></div>
       </div>
     </div>
     <div class="report-advice-box classification-${classification}">
