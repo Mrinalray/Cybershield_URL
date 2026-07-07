@@ -560,20 +560,60 @@ html.light-mode input[type="text"]:focus {
   color: var(--text-sub);
   line-height: 1.6;
 }
-
 .result-url {
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: 'Courier New', monospace;
   font-size: 11px;
   color: var(--text-muted);
   background: rgba(0,0,0,0.2);
   border-radius: 8px;
   padding: 8px 12px;
+}
+
+.result-url-text {
+  flex: 1;
   word-break: break-all;
 }
 
 html.light-mode .result-url { background: rgba(0,0,0,0.06); }
 
+.copy-url-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,245,255,0.1);
+  border: 1px solid rgba(0,245,255,0.25);
+  border-radius: 6px;
+  padding: 4px 9px;
+  color: var(--accent-cyan);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.copy-url-btn:hover {
+  background: rgba(0,245,255,0.18);
+  border-color: var(--accent-cyan);
+}
+
+.copy-url-btn .check-icon { display: none; }
+
+.copy-url-btn.copied {
+  background: rgba(0,255,136,0.14);
+  border-color: rgba(0,255,136,0.4);
+  color: var(--accent-green);
+}
+
+.copy-url-btn.copied .copy-icon { display: none; }
+.copy-url-btn.copied .check-icon { display: block; }
 .threat-tags {
   display: flex;
   flex-wrap: wrap;

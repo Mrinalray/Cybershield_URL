@@ -144,14 +144,62 @@ function showResult(type, title, desc, url, threats) {
       <div class="result-body">
         <div class="result-title">${title}</div>
         <div class="result-desc">${desc}</div>
-        ${url ? `<div class="result-url">${url}</div>` : ''}
+        ${url ? `<div class="result-url">
+  <span class="result-url-text">${url}</span>
+  <button class="copy-url-btn" type="button" aria-label="Copy URL" onclick="copyResultUrl(this)">
+    <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+    <svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span class="copy-url-label">Copy</span>
+  </button>
+</div>` : ''}
         ${threats && threats.length
           ? `<div class="threat-tags">${threats.map(t => `<span class="threat-tag">${t}</span>`).join('')}</div>`
           : ''}
       </div>
     </div>`;
 }
+function copyResultUrl(btn) {
+  const textEl = btn.previousElementSibling;
+  const text = textEl ? textEl.textContent : '';
+  if (!text) return;
 
+  const label = btn.querySelector('.copy-url-label');
+  const markCopied = () => {
+    btn.classList.add('copied');
+    if (label) label.textContent = 'Copied';
+    clearTimeout(btn._copyResetTimer);
+    btn._copyResetTimer = setTimeout(() => {
+      btn.classList.remove('copied');
+      if (label) label.textContent = 'Copy';
+    }, 2000);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(markCopied).catch(() => {
+      fallbackCopy(text);
+      markCopied();
+    });
+  } else {
+    fallbackCopy(text);
+    markCopied();
+  }
+}
+
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try { document.execCommand('copy'); } catch (e) { /* no-op */ }
+  document.body.removeChild(textarea);
+}
 async function checkSecurity() {
   const input = document.getElementById('urlInput');
   const btn   = document.getElementById('scanBtn');
