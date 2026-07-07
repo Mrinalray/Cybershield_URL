@@ -103,8 +103,21 @@ function toggleTeam() {
 // ═══════════════════════════════════
 let totalScans = 0, safeCount = 0, dangerCount = 0;
 
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('cybershield_history') || '[]');
+  } catch (err) {
+    console.warn('Unable to parse scan history:', err);
+    return [];
+  }
+}
+
+function setHistory(history) {
+  localStorage.setItem('cybershield_history', JSON.stringify(history));
+}
+
 function loadStats() {
-  const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
+  const history = getHistory();
   totalScans = history.length;
   safeCount  = history.filter(r => r.status === 'safe').length;
   dangerCount = history.filter(r => r.status === 'danger').length;
@@ -126,9 +139,12 @@ function fillExample(url) {
 }
 
 function saveToHistory(url, status, threats) {
-  const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
+  const history = getHistory();
   history.push({ url, status, threats, timestamp: new Date().toISOString() });
-  localStorage.setItem('cybershield_history', JSON.stringify(history));
+  if (history.length > 200) {
+    history.splice(0, history.length - 200);
+  }
+  setHistory(history);
 }
 
 function showResult(type, title, desc, url, threats) {
@@ -171,7 +187,17 @@ async function checkSecurity() {
   showResult('loading', 'Scanning...', 'Checking against threat databases…', url, []);
 
   try {
-    const apiHost = 'https://cybershield-30a3.onrender.com';
+    const apiHost = (function() {
+      // Prefer local backend during development or when opened from file://
+      try {
+        if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+          console.debug('[Scanner] Using local API host http://localhost:3000');
+          return 'http://localhost:3000';
+        }
+      } catch (e) { /* ignore */ }
+      return 'https://cybershield-30a3.onrender.com';
+    })();
+    console.debug('[Scanner] apiHost =', apiHost);
 
     const response = await fetch(`${apiHost}/check`, {
       method: 'POST',

@@ -114,7 +114,7 @@ node server.js
 ## 🚀 Roadmap
 
 - [ ] 🔐 Email breach checker (HIBP API)
-- [ ] 📊 Threat analytics dashboard with charts
+- [x] 📊 Threat analytics dashboard with charts
 - [ ] 🌍 Browser extension
 - [ ] 🤖 AI-based threat detection
 - [ ] 📤 Export scan logs for offline analysis
