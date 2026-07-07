@@ -196,10 +196,12 @@ async function checkSecurity() {
       saveToHistory(url, 'safe', []);
       showResult('safe', '✓ URL is Safe', 'No known threats detected via Google Safe Browsing.', url, []);
     }
+    renderDomainInfoCard(url); // domain info card — single hoisted call covers both safe & danger
 
   } catch (err) {
     showResult('error', 'Backend Not Connected',
       `Ensure your backend server is running.<br><small>Error: ${err.message}</small>`, '', []);
+    renderDomainInfoCard(''); // reset card to idle on backend failure
   } finally {
     if (btn) btn.disabled = false;
   }
