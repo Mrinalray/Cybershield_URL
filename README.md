@@ -87,6 +87,15 @@
 
 </details>
 
+<details>
+<summary><b>🚀 Redis Caching (Optional)</b></summary>
+
+1. You can speed up responses and save API quotas by enabling Redis caching.
+2. Provide your Redis connection URL (e.g., from Redis Labs, Upstash, or local server).
+3. Save it as `REDIS_URL` in your `.env` file (e.g., `REDIS_URL=redis://localhost:6379`)
+
+</details>
+
 ---
 
 ## ⚙️ Setup & Installation
@@ -98,7 +107,7 @@ cd Cybershield_URL
 
 # 2. Configure environment variables
 cp .env.example .env
-# Open .env and fill in API_KEY and GEMINI_API_KEY
+# Open .env and fill in API_KEY, GEMINI_API_KEY, and (optionally) REDIS_URL
 
 # 3. Start the backend
 node server.js

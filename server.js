@@ -1,6 +1,7 @@
 const express  = require('express');
 const cors     = require('cors');
 const dotenv   = require('dotenv');
+const { createClient } = require('redis');
 dotenv.config();
 
 console.log("API_KEY:", process.env.API_KEY);
@@ -8,6 +9,21 @@ console.log("GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+// ─── Redis Setup ───
+let redisClient = null;
+if (process.env.REDIS_URL) {
+  redisClient = createClient({ url: process.env.REDIS_URL });
+  
+  redisClient.on('error', (err) => console.warn('[REDIS ERROR]', err.message));
+  
+  redisClient.connect().then(() => {
+    console.log('[REDIS] Connected successfully');
+  }).catch(err => {
+    console.warn('[REDIS] Initial connection failed:', err.message);
+    redisClient = null;
+  });
+}
 
 // ─── CORS ───
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
@@ -75,6 +91,21 @@ app.post('/check', async (req, res) => {
 
   console.log(`[SCAN] ${userUrl}`);
 
+  // ─── Check Cache ───
+  if (redisClient && redisClient.isOpen) {
+    try {
+      const cachedResult = await redisClient.get(userUrl);
+      if (cachedResult) {
+        console.log(`[CACHE HIT] ${userUrl}`);
+        const data = JSON.parse(cachedResult);
+        data.cached = true;
+        return res.json(data);
+      }
+    } catch (err) {
+      console.warn('[REDIS GET ERROR]', err.message);
+    }
+  }
+
   const body = {
     client: { clientId: 'cybershield', clientVersion: '2.0' },
     threatInfo: {
@@ -99,6 +130,16 @@ app.post('/check', async (req, res) => {
 
     const data = await response.json();
     console.log(`[RESULT] Matches: ${data.matches ? data.matches.length : 0}`);
+
+    // ─── Set Cache ───
+    if (redisClient && redisClient.isOpen) {
+      try {
+        await redisClient.setEx(userUrl, 86400, JSON.stringify(data));
+      } catch (err) {
+        console.warn('[REDIS SET ERROR]', err.message);
+      }
+    }
+
     res.json(data);
 
   } catch (err) {
