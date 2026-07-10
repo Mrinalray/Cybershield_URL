@@ -66,6 +66,12 @@
 
 ---
 
+## 🏗️ Architecture
+
+CyberShield uses static HTML/CSS/JavaScript pages with an Express backend for API calls to Google Safe Browsing and Gemini. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the data flow, local storage contract, environment variables, and contributor notes.
+
+---
+
 ## 🔑 API Setup
 
 <details>

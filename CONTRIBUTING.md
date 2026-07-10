@@ -401,6 +401,7 @@ Any other relevant information.
 
 ## 📚 Resources
 
+- [Architecture Overview](docs/ARCHITECTURE.md)
 - [Google Safe Browsing API Docs](https://developers.google.com/safe-browsing)
 - [WCAG Accessibility Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [MDN Web Docs](https://developer.mozilla.org/)
