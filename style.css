@@ -563,6 +563,9 @@ html.light-mode input[type="text"]:focus {
 
 .result-url {
   margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   font-family: 'Courier New', monospace;
   font-size: 11px;
   color: var(--text-muted);
@@ -572,7 +575,43 @@ html.light-mode input[type="text"]:focus {
   word-break: break-all;
 }
 
+.result-url-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.copy-url-btn {
+  flex-shrink: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-sub);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.copy-url-btn:hover {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  background: rgba(0, 245, 255, 0.06);
+}
+
+.copy-url-btn.copied {
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
 html.light-mode .result-url { background: rgba(0,0,0,0.06); }
+
+html.light-mode .copy-url-btn:hover {
+  background: rgba(0, 112, 204, 0.06);
+}
 
 .threat-tags {
   display: flex;

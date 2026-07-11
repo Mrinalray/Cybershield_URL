@@ -131,6 +131,19 @@ function saveToHistory(url, status, threats) {
   localStorage.setItem('cybershield_history', JSON.stringify(history));
 }
 
+function copyResultUrl(btn) {
+  const textEl = btn.closest('.result-url')?.querySelector('.result-url-text');
+  if (!textEl) return;
+  navigator.clipboard.writeText(textEl.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy URL';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
 function showResult(type, title, desc, url, threats) {
   const el = document.getElementById('result');
   if (!el) return;
@@ -144,7 +157,7 @@ function showResult(type, title, desc, url, threats) {
       <div class="result-body">
         <div class="result-title">${title}</div>
         <div class="result-desc">${desc}</div>
-        ${url ? `<div class="result-url">${url}</div>` : ''}
+        ${url ? `<div class="result-url"><span class="result-url-text">${url}</span><button type="button" class="copy-url-btn" aria-label="Copy URL" onclick="copyResultUrl(this)">Copy URL</button></div>` : ''}
         ${threats && threats.length
           ? `<div class="threat-tags">${threats.map(t => `<span class="threat-tag">${t}</span>`).join('')}</div>`
           : ''}
