@@ -574,6 +574,43 @@ html.light-mode input[type="text"]:focus {
 
 html.light-mode .result-url { background: rgba(0,0,0,0.06); }
 
+.result-actions {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.share-result-btn {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-sub);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.share-result-btn:hover {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  background: rgba(0, 245, 255, 0.06);
+}
+
+.share-result-btn.copied {
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+html.light-mode .share-result-btn:hover {
+  background: rgba(0, 112, 204, 0.06);
+}
+
 .threat-tags {
   display: flex;
   flex-wrap: wrap;
