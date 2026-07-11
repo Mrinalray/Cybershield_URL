@@ -16,9 +16,16 @@ window.addEventListener('load', () => {
   const main   = document.getElementById('mainPage');
   if (!loader || !main) return;
 
-  if (sessionStorage.getItem('introShown')) {
+  const sharedUrl = new URLSearchParams(window.location.search).get('url');
+
+  // Skip intro when returning or opening a shared scan link
+  if (sessionStorage.getItem('introShown') || sharedUrl) {
     loader.style.display = 'none';
     main.classList.remove('hidden');
+    if (sharedUrl) {
+      sessionStorage.setItem('introShown', 'true');
+      maybeAutoScanSharedUrl();
+    }
   } else {
     setTimeout(() => {
       loader.classList.add('fade-out');
@@ -131,9 +138,41 @@ function saveToHistory(url, status, threats) {
   localStorage.setItem('cybershield_history', JSON.stringify(history));
 }
 
+function escapeAttr(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function shareResultLink(btn) {
+  const url = btn.getAttribute('data-url');
+  if (!url) return;
+  const link = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(url)}`;
+  navigator.clipboard.writeText(link).then(() => {
+    btn.textContent = 'Link copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Share Result';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function maybeAutoScanSharedUrl() {
+  const sharedUrl = new URLSearchParams(window.location.search).get('url');
+  if (!sharedUrl) return;
+  const input = document.getElementById('urlInput');
+  if (!input) return;
+  input.value = sharedUrl;
+  checkSecurity();
+}
+
 function showResult(type, title, desc, url, threats) {
   const el = document.getElementById('result');
   if (!el) return;
+  const canShare = url && (type === 'safe' || type === 'danger');
   el.innerHTML = `
     <div class="result-card ${type}">
       <div class="result-icon">
@@ -147,6 +186,9 @@ function showResult(type, title, desc, url, threats) {
         ${url ? `<div class="result-url">${url}</div>` : ''}
         ${threats && threats.length
           ? `<div class="threat-tags">${threats.map(t => `<span class="threat-tag">${t}</span>`).join('')}</div>`
+          : ''}
+        ${canShare
+          ? `<div class="result-actions"><button type="button" class="share-result-btn" data-url="${escapeAttr(url)}" aria-label="Share Result" onclick="shareResultLink(this)">Share Result</button></div>`
           : ''}
       </div>
     </div>`;
