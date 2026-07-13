@@ -8,6 +8,23 @@ console.log("GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+const redis = require('redis');
+
+// ─── Redis Setup ───
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+
+redisClient.on('error', (err) => console.warn('[REDIS ERROR]', err));
+redisClient.on('connect', () => console.log('[REDIS] Connected'));
+
+(async () => {
+  try {
+    await redisClient.connect();
+  } catch (err) {
+    console.warn('[REDIS] Failed to connect, proceeding without cache.');
+  }
+})();
 
 // ─── CORS ───
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
@@ -75,6 +92,20 @@ app.post('/check', async (req, res) => {
 
   console.log(`[SCAN] ${userUrl}`);
 
+  const CACHE_KEY = `url_check:${userUrl}`;
+  
+  if (redisClient.isOpen) {
+    try {
+      const cachedResult = await redisClient.get(CACHE_KEY);
+      if (cachedResult) {
+        console.log(`[CACHE HIT] ${userUrl}`);
+        return res.json(JSON.parse(cachedResult));
+      }
+    } catch (err) {
+      console.warn('[REDIS ERROR] GET failed', err.message);
+    }
+  }
+
   const body = {
     client: { clientId: 'cybershield', clientVersion: '2.0' },
     threatInfo: {
@@ -99,6 +130,16 @@ app.post('/check', async (req, res) => {
 
     const data = await response.json();
     console.log(`[RESULT] Matches: ${data.matches ? data.matches.length : 0}`);
+    
+    if (redisClient.isOpen) {
+      try {
+        const ttl = (data.matches && data.matches.length > 0) ? 3600 : 86400; // 1h malicious, 24h safe
+        await redisClient.setEx(CACHE_KEY, ttl, JSON.stringify(data));
+      } catch (err) {
+        console.warn('[REDIS ERROR] SET failed', err.message);
+      }
+    }
+
     res.json(data);
 
   } catch (err) {
