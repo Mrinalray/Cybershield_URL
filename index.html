@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png" />
 </head>
+
 <body>
 
   <!-- ── Loading Screen ── -->
@@ -14,14 +16,17 @@
     <div class="loader-inner">
       <div class="loader-sonar">
         <div class="loader-core">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#00f5ff">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            style="color:#00f5ff">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
       </div>
       <div class="loader-brand">CyberShield</div>
       <div class="loader-tagline">Your Security, In Your Hands</div>
-      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar"></div>
+      </div>
     </div>
   </div>
 
@@ -29,11 +34,12 @@
   <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme">
     <div class="toggle-icon-wrap">
       <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="4"/>
-        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41" />
       </svg>
       <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
       </svg>
     </div>
   </button>
@@ -50,7 +56,8 @@
         </div>
         <h1>CyberSheild URL Scanner</h1>
         <p>Check any link instantly to see if it is safe to visit </p>
-        <p class="subtitle">Real-time threat detection powered by Google Safe Browsing API. Scans for phishing, malware &amp; social engineering.</p>
+        <p class="subtitle">Real-time threat detection powered by Google Safe Browsing API. Scans for phishing, malware
+          &amp; social engineering.</p>
       </header>
 
       <!-- Scanner Card -->
@@ -58,14 +65,16 @@
         <div class="input-row">
           <div class="input-wrap">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
             </svg>
-            <input type="text" id="urlInput" placeholder="Paste your link hereto scan..." autocomplete="off" spellcheck="false">
+            <input type="text" id="urlInput" placeholder="Paste your link hereto scan..." autocomplete="off"
+              spellcheck="false">
           </div>
           <button class="scan-btn" id="scanBtn" onclick="checkSecurity()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
             </svg>
             Scan URL
           </button>
@@ -73,10 +82,28 @@
 
         <div class="examples">
           <span class="examples-label">Try:</span>
-          <span class="example-chip" onclick="fillExample('https://google.com')">google.com</span>
-          <span class="example-chip" onclick="fillExample('https://github.com')">github.com</span>
-          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')">phishing test</span>
-          <span class="example-chip" onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')">malware test</span>
+
+          <button type="button" class="example-chip" onclick="fillExample('https://google.com')"
+            aria-label="Use Google example URL">
+            google.com
+          </button>
+
+          <button type="button" class="example-chip" onclick="fillExample('https://github.com')"
+            aria-label="Use GitHub example URL">
+            github.com
+          </button>
+
+          <button type="button" class="example-chip"
+            onclick="fillExample('http://testsafebrowsing.appspot.com/s/phishing.html')"
+            aria-label="Use phishing test URL">
+            phishing test
+          </button>
+
+          <button type="button" class="example-chip"
+            onclick="fillExample('http://testsafebrowsing.appspot.com/s/malware.html')"
+            aria-label="Use malware test URL">
+            malware test
+          </button>
         </div>
 
         <div id="result"></div>
@@ -102,14 +129,17 @@
       <div class="dashboard-cta" style="margin-top:20px">
         <a class="scan-btn" href="chat.html">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
           Scam Text Detector
         </a>
-        <a class="scan-btn" href="dashboard.html" style="background:var(--card-bg); color:var(--accent-cyan); border:1px solid var(--card-border);">
+        <a class="scan-btn" href="dashboard.html"
+          style="background:var(--card-bg); color:var(--accent-cyan); border:1px solid var(--card-border);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
           </svg>
           Threat Dashboard
         </a>
@@ -135,7 +165,7 @@
       </div>
 
       <!-- Team Section -->
-     
+
       <div class="footer">Built for Security &mdash; Powered by Google Safe Browsing API</div>
 
     </div>
@@ -144,7 +174,9 @@
     <footer class="main-footer">
       <div class="footer-content">
         <div class="footer-brand">
-          <div class="logo-badge"><div class="dot"></div>CyberShield</div>
+          <div class="logo-badge">
+            <div class="dot"></div>CyberShield
+          </div>
           <p>Real-time URL security analysis to protect your digital footprint from evolving threats.</p>
         </div>
         <div class="footer-links">
@@ -161,14 +193,17 @@
           <div class="footer-col">
             <h4>Resources</h4>
             <a href="docs.html">Documentation</a>
-            <a href="https://github.com/Mrinalray/Cybershield_URL" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+            <a href="https://github.com/Mrinalray/Cybershield_URL" target="_blank" rel="noopener noreferrer">GitHub
+              Repo</a>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">&copy; 2026 CyberShield URL Scanner. Built for Security &mdash; Powered by Google Safe Browsing API.</div>
+      <div class="footer-bottom">&copy; 2026 CyberShield URL Scanner. Built for Security &mdash; Powered by Google Safe
+        Browsing API.</div>
     </footer>
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>
