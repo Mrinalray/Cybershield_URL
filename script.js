@@ -125,6 +125,32 @@ function fillExample(url) {
   if (input) { input.value = url; input.focus(); }
 }
 
+function normalizeScanUrl(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return { error: 'Paste the URL you want to check above.' };
+  }
+
+  if (/^(javascript|data|file|ftp):/i.test(trimmed)) {
+    return { error: 'Only http and https URLs can be scanned safely.' };
+  }
+
+  const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+
+  try {
+    const parsed = new URL(candidate);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return { error: 'Only http and https URLs can be scanned safely.' };
+    }
+    if (!parsed.hostname.includes('.')) {
+      return { error: 'Enter a complete domain such as example.com.' };
+    }
+    return { url: parsed.toString() };
+  } catch {
+    return { error: 'Enter a valid URL or domain name.' };
+  }
+}
+
 function saveToHistory(url, status, threats) {
   const history = JSON.parse(localStorage.getItem('cybershield_history') || '[]');
   history.push({ url, status, threats, timestamp: new Date().toISOString() });
@@ -157,15 +183,13 @@ async function checkSecurity() {
   const btn   = document.getElementById('scanBtn');
   const text  = input ? input.value.trim() : '';
 
-  if (!text) {
-    showResult('error', 'Enter a URL', 'Paste the URL you want to check above.', '', []);
+  const normalized = normalizeScanUrl(text);
+  if (normalized.error) {
+    showResult('error', 'Check the URL format', normalized.error, '', []);
     return;
   }
 
-  let url = text;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-  }
+  const url = normalized.url;
 
   if (btn) btn.disabled = true;
   showResult('loading', 'Scanning...', 'Checking against threat databases…', url, []);
