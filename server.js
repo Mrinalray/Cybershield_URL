@@ -55,6 +55,53 @@ async function fetchWithRetry(url, options, retries = MAX_RETRIES) {
   }
 }
 
+// ─── SSRF / Internal-IP Guard (Issue #219) ───
+// Blocks loopback, private RFC-1918, link-local, and IPv6 private ranges
+// to prevent Denial-of-Wallet attacks via Google Safe Browsing API spam.
+function isInternalHostname(hostname) {
+  if (!hostname) return true;
+
+  const h = hostname.toLowerCase().trim();
+
+  // Reject obvious keyword hostnames
+  if (h === 'localhost') return true;
+
+  // Strip IPv6 brackets e.g. [::1] → ::1
+  const bare = h.startsWith('[') && h.endsWith(']') ? h.slice(1, -1) : h;
+
+  // IPv6 loopback and private/ULA ranges
+  const ipv6Blocked = [
+    /^::1$/,                      // loopback
+    /^fc[0-9a-f]{2}:/,            // ULA fc00::/7 first half
+    /^fd[0-9a-f]{2}:/,            // ULA fc00::/7 second half
+    /^fe80:/,                     // link-local
+    /^::ffff:127\./,              // IPv4-mapped 127.x
+    /^::ffff:10\./,               // IPv4-mapped 10.x
+    /^::ffff:192\.168\./,         // IPv4-mapped 192.168.x
+    /^::ffff:172\.(1[6-9]|2[0-9]|3[01])\./  // IPv4-mapped 172.16-31.x
+  ];
+  if (ipv6Blocked.some(re => re.test(bare))) return true;
+
+  // IPv4 address matching
+  const ipv4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(bare);
+  if (ipv4) {
+    const [, a, b, c] = ipv4.map(Number);
+    if (a === 127)                              return true; // 127.0.0.0/8 loopback
+    if (a === 10)                               return true; // 10.0.0.0/8 RFC-1918
+    if (a === 192 && b === 168)                 return true; // 192.168.0.0/16 RFC-1918
+    if (a === 172 && b >= 16 && b <= 31)        return true; // 172.16.0.0/12 RFC-1918
+    if (a === 169 && b === 254)                 return true; // 169.254.0.0/16 link-local
+    if (a === 0)                                return true; // 0.x.x.x unspecified
+    if (a === 100 && b >= 64 && b <= 127)       return true; // 100.64.0.0/10 shared address
+    if (a === 198 && (b === 18 || b === 19))    return true; // 198.18.0.0/15 benchmarking
+    if (a === 203 && b === 0 && c === 113)      return true; // 203.0.113.0/24 documentation
+    if (a === 255 && b === 255 && c === 255)    return true; // broadcast
+    if (a === 240)                              return true; // 240.0.0.0/4 reserved
+  }
+
+  return false;
+}
+
 // ─── Health check ───
 app.get('/', (req, res) => {
   res.json({ status: 'CyberShield backend running', port: PORT, version: '2.0' });
@@ -65,8 +112,25 @@ app.post('/check', async (req, res) => {
   const userUrl = req.body.url;
   if (!userUrl) return res.status(400).json({ error: 'No URL provided' });
 
-  try { new URL(userUrl); } catch {
+  // Validate URL format first
+  let parsedUrl;
+  try { parsedUrl = new URL(userUrl); } catch {
     return res.status(400).json({ error: 'Invalid URL format' });
+  }
+
+  // Only allow http: and https: schemes to prevent non-HTTP abuse
+  if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+    return res.status(400).json({ error: 'Only http and https URLs are supported' });
+  }
+
+  // SSRF protection (Issue #219): block internal/loopback addresses
+  const hostname = parsedUrl.hostname;
+  if (isInternalHostname(hostname)) {
+    console.warn(`[SSRF BLOCKED] Attempt to scan internal address: ${hostname}`);
+    return res.status(400).json({
+      error: 'Internal or local addresses are not allowed',
+      detail: 'Scanning private IPs, loopback addresses, or reserved ranges is not permitted.'
+    });
   }
 
   if (!SAFE_BROWSING_KEY) {
